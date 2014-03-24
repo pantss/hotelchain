@@ -30,7 +30,7 @@ public class Reservation implements Serializable
 
 	public void cancel()
 	{
-		room.vacate(reservationID);
+		hotel.cancelReservation(this);
 		cancelled = true;
 	}
 	public Guest getGuest()
@@ -56,5 +56,10 @@ public class Reservation implements Serializable
 	public int getID()
 	{
 		return reservationID;
+	}
+	
+	public boolean isCancelled()
+	{
+		return cancelled;
 	}
 }

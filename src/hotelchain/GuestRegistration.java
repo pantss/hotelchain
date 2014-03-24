@@ -32,21 +32,8 @@ public class GuestRegistration extends FileHandler
 			guests = (ArrayList<Guest>)readFile();
 
 		guestIDcounter = getIDcounter();
-	}
-		
-	/**
-	 * Prints information on all guests registered to the terminal.
-	 *  	Note: Printing this instead of passing guests so as to keep instances of Guest private.
-	 */
-	public void printAllGuests()
-	{
-		for(int i=0;i<guests.size();i++)
-		{
-			Guest g = guests.get(i);
-			System.out.println(g.getID() + ": " + g.getName()
-					+ "\n          " + g.getAddress() + ", " + g.getCity() + ", " + g.getCountry());			
-		}
-	}	
+	}		
+
 	
 	/**
 	 * Registers a new guest of the hotel chain given their personal information and returns its guest ID number.
@@ -73,6 +60,8 @@ public class GuestRegistration extends FileHandler
 	 * @return Returns guest ID belong to the given name or null of no match was found.
 	 * 
 	 * TODO  Finds guest ID based on NAME ONLY (returns first match only)
+	 * TODO Find guest based on part of name
+	 * TODO Present multiple results and choose
 	 */
 	public int findGuestID(String name)
 	{
@@ -105,21 +94,23 @@ public class GuestRegistration extends FileHandler
 	 * @param ID Guest ID number
 	 * @return Returns whether the guest indicated by the given ID number has been successfully removed.
 	 */
-	public boolean removeGuest(int ID)
+	public boolean removeGuest(Guest guest)
 	{
-		if(ID != -1)
-			for(int i=0;i<guests.size();i++)
+		if(guest!=null)
+		{	guests.remove(guest);
+		/*	for(int i=0;i<guests.size();i++)
 			{	
 				Guest g = guests.get(i);
 				if(g.getID() == ID)
 				{
 					guests.remove(g);
-					if(writeFile(guests, guestIDcounter))
-						return true;
-					else
-						return false;
-				}
-			}
+				*/
+			if(writeFile(guests, guestIDcounter))
+				return true;
+			else
+				return false;
+		}
+			
 	
 		return false;		
 	}
@@ -129,7 +120,14 @@ public class GuestRegistration extends FileHandler
 	 */
 	public int getNumberOfRegisteredGuests()
 	{
-		System.out.println("size: " + guests.toString());
 		return guests.size();
 	}	
+	
+	/**
+	 * @return Returns the current guestIDcounter.
+	 */
+	public int getGuestIDcounter()
+	{
+		return guestIDcounter;
+	}
 }

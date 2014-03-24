@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /*
- * TODO: Exit options
+ * TODO: East border of columns
  */
 public class TextInterface
 {
@@ -23,7 +23,7 @@ public class TextInterface
 	protected boolean promptInputConfirmation(boolean printText)
 	{
 		if(printText)
-			System.out.println("Is the above information correct? (Y/N): ");
+			System.out.println("> Is the above information correct? (Y/N): ");
 		boolean valid = false;
 		boolean correct = false;
 		
@@ -40,6 +40,13 @@ public class TextInterface
 					}
 					else if( Character.toLowerCase(c) == 'n')
 						valid = true;
+					
+					if(!valid)
+					{
+						System.out.println("! Please give a valid answer.");
+						System.out.println("> Is the above information correct? (Y/N): ");
+					}
+
 				}
 		}
 		
@@ -54,6 +61,7 @@ public class TextInterface
 	 * @return int: displayed value of option chosen
 	 * 
 	 *  firstOption <= lastOption
+	 *  TODO Cancel input
 	 */
 	protected  int getUserChoice(int firstOption, int lastOption)
 	{
@@ -80,8 +88,8 @@ public class TextInterface
 			if(choice == 9 || (choice >= firstOption && choice <= lastOption))
 				validResponse = true;
 			else
-				System.out.println("Please enter a valid choice."	
-						+ "\nYour choice: ");
+				System.out.println("! Please enter a valid choice."	
+						+ "\n> Your choice: ");
 		}	
 		
 		return choice;
@@ -106,29 +114,34 @@ public class TextInterface
 
 	protected void printOptions(String[] options)
 	{
-//		System.out.println("\nPlease select an option."
-//				+ "\n================================");
 		
-		for(int i=0; i<options.length-1; i++)
+		System.out.println("\n> Please select an option.");
+		printDoubleLine();
+		
+		for(int i=1; i<options.length; i++)
 		{
-			System.out.println(i+1 + ": " + options[i]);
+			System.out.println(" " + i + ": " + options[i-1]);
 		}
+		System.out.println(" -------------");
 		if(options.length<10)
-			System.out.println(9 +": " + options[options.length-1]);
+			System.out.println(" " + 9 +": " + options[options.length-1]);
 		else
-			System.out.println(options.length + ": " + options[options.length-1]);
-		
-		System.out.println("================================"
-				+ "\nYour choice: ");
+			System.out.println("   " + options.length + ": " + options[options.length-1]);
+		printDoubleLine();
+		System.out.println("\n> Your choice: ");
 	}
 	
+	/**
+	 * Prints the header String between two short double lines.
+	 * @param header Text to be printed as header.
+	 */
 	protected void printHeader(String header)
 	{
-	//	System.out.println( "\n================================\n" 
-	//			+ header
-	//			+ "\n================================");
-		
-		System.out.println("=====" + header + "=====");
+		System.out.println();
+		printDoubleLine();
+		System.out.println(" | " + header);
+		printDoubleLine();
+		//System.out.println("\n  ====" + header + "=====");
 	}
 	/**
 	 * Capitalizes every first letter of each word of a String and returns this as a new String
@@ -146,5 +159,20 @@ public class TextInterface
 					chars[i+1] = Character.toUpperCase(chars[i+1]);
 		
 		return new String(chars);
+	}
+	
+	/**
+	 * Prints a single line on the console, preceded by " | ".
+	 */
+	protected void printSingleLine()
+	{
+		System.out.println(" | ----------------------------------");
+	}
+	/**
+	 * Prints a double line on the console.
+	 */
+	protected void printDoubleLine()
+	{
+		System.out.println("  ===================================");
 	}
 }

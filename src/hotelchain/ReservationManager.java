@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 public class ReservationManager extends FileHandler
 {
 	private ArrayList<Reservation> reservations;
+
 	private int reservationIDcounter;
 	private Calendar currentDate = Calendar.getInstance();	
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd yyyy");
@@ -29,22 +30,24 @@ public class ReservationManager extends FileHandler
 	
 	public Reservation reserveRoom(Guest resGuest, Hotel resHotel, Calendar resStartDate, Calendar resEndDate, boolean bridalSuite)
 	{
-		Room reservedRoom = null;
+		Reservation reservation = null;
 	
 		if(bridalSuite)
-		{	
-			if(resHotel.isBridalSuiteAvailable(resStartDate, resEndDate))
-				reservedRoom = resHotel.reserveBridalSuite(resGuest, resStartDate, resEndDate, reservationIDcounter);		
+		{
+			//TODO  TST
+			System.out.println("Bridalsuite=y ");
+			reservation = resHotel.reserveBridalSuite(resGuest, resStartDate, resEndDate, reservationIDcounter);
+
+			//TODO  TST
+			System.out.println("ReservationBridal: " + reservation); 
 		}
 		else
-		{
-			reservedRoom = resHotel.reserveRoom(resGuest, resStartDate, resEndDate, reservationIDcounter);
-		}
-		if(reservedRoom != null)
+			reservation = resHotel.reserveRoom(resGuest, resStartDate, resEndDate, reservationIDcounter);
+		
+		if(reservation != null)
 		{ 
-			Reservation reservation = new Reservation(resGuest, resHotel, reservedRoom, resStartDate, resEndDate, reservationIDcounter++);
-			reservedRoom.addReservation(reservation);
 			reservations.add(reservation);
+			reservationIDcounter++;
 			
 			if(writeFile(reservations, reservationIDcounter))
 				return reservation;
@@ -52,7 +55,7 @@ public class ReservationManager extends FileHandler
 		return null;
 	}	
 	
-	public Reservation findReservation(int resID)
+	public Reservation getReservation(int resID)
 	{
 		for(int i=0; i<reservations.size();i++)
 			if(reservations.get(i).getID() == resID)
@@ -71,14 +74,12 @@ public class ReservationManager extends FileHandler
 		return -1;
 	}
 	
-	//TODO decide whether to keep cancelled reservations in array "reservations" or check for Reservation.cancelled
 	public void cancelReservation(Reservation reservation)
 	{
 		for(int i=0;i<reservations.size();i++)
 			if(reservation.equals(reservations.get(i)))
 			{
 				reservations.get(i).cancel();
-	reservations.remove(i);
 				
 				if(!writeFile(reservations, reservationIDcounter))
 					System.out.println("ERROR: could not remove reservation from file");
@@ -95,25 +96,36 @@ public class ReservationManager extends FileHandler
 		return dateFormat.format(date.getTime());
 	}
 	
+	public int getReservationIDcounter()
+	{
+		return reservationIDcounter;
+	}
+	
+	public int getNumberOfReservations()
+	{
+		return reservations.size();
+	}
 	/*
 	 * Printing this instead of passing reservations so as to keep instances of Reservation private.
 	 * 
 	 * TODO build printAll, printComing, printAllNon-Cancelled, either here or in interface
 	 */
-	public void printAllReservations()
+/*	public void printAllReservations()
 	{	
 		for(int i=0; i<reservations.size();i++)
 		{
 			Reservation r = reservations.get(i);
 //TODO TST
-System.out.println("Reservation: " + r.toString());
-//System.out.println(""
-//System.out.println(""
-//System.out.println("
+// System.out.println("Reservation: " + r.toString());
+
 			System.out.println(r.getID() + ": " + r.getGuest().getName()
 					+ "\n              from " + calendarToString(r.getStartDate()) + " untill " + calendarToString(r.getEndDate())
 					+ "\nat hotel " + r.getHotel().getName() + ", room no. " + r.getRoom().getRoomNumber());
+			if(r.isCancelled())
+				System.out.println("!!! Reservation was CANCELLED.");
 		}
+		if(reservations.size() == 0)
+			System.out.println("There are currently no reservations.");
 	}
-	//TODO printOccupationStatistics()
+*/	//TODO printOccupationStatistics()
 }

@@ -16,7 +16,7 @@ public class HotelChain
 	private ReservationManager reservations;
 	
 	private final int NUMBER_OF_HOTELS = 3;	
-	private final String[] hotelNames = new String[] { "SimpleHotel", "MediocreHotel", "FancyHotel" };
+	private final String[] hotelNames = new String[] { "SimpleHotel  ", "MediocreHotel", "FancyHotel   " };
 	private final int[] roomsInHotel = new int[] { 60, 60, 80 };
 	
 	/**
@@ -31,8 +31,8 @@ public class HotelChain
 		hotels = new Hotel[NUMBER_OF_HOTELS];
 		addHotels();
 		
-		guests = new GuestRegistration();
-		reservations = new ReservationManager();	
+		guests = new GuestRegistration(); 
+		reservations = new ReservationManager();
 	}
 	
 	/**
