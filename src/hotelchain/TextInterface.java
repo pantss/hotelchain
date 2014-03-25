@@ -91,8 +91,6 @@ public class TextInterface
 	 * @param firstOption Displayed value of first choice of valid choice range.
 	 * @param lastOption Displayed value of last choice of valid choice range.
 	 * @return Returns the choice as indicated by user input.
-	 * 
-	 * TODO Cancel input
 	 */
 	protected  int getUserChoice(int firstOption, int lastOption)
 	{
@@ -154,7 +152,11 @@ public class TextInterface
 	{
 		System.out.println();
 		printDoubleLine();
-		System.out.println(" | " + header);
+		String out = " | " + header;
+		for(int i=out.length(); i < 37; i++)
+			out = out.concat(" ");
+		out = out.concat("|");
+		System.out.println(out);
 		printDoubleLine();
 	}
 		
@@ -163,7 +165,7 @@ public class TextInterface
 	 */
 	protected void printSingleLine()
 	{
-		System.out.println(" | ----------------------------------");
+		System.out.println(" | ----------------------------------|");
 	}
 	
 	/**

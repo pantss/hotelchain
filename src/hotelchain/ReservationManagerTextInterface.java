@@ -1,5 +1,6 @@
 package hotelchain;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -53,6 +54,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	
 	/**
 	 * Displays the Reservations Information screen of this interface.
+	 * TODO concat to right column border
 	 */
 	private void displayReservationsInformation()
 	{
@@ -81,7 +83,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	 */
 	private void showReserveRoom()
 	{		
-		//TODO choose between choose all or find guest
+		//Can be substituted with showFindGuests (needs to be made protected then)
 		displayGuestsInformation();
 		
 		System.out.println("> Please enter ID of guest to book a room for: ");
@@ -263,7 +265,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	}
 	
 	/**
-	 * Prints information of a given Reseration to the screen.
+	 * Prints information of a given Reservation to the screen.
 	 * @param res Reservation whose information is to be printed.
 	 */
 	private void printReservation(Reservation res)
@@ -271,12 +273,11 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		System.out.println("	 Result:");
 		System.out.println("	**********************");
 		System.out.println("	* Reservation ID: " + res.getID()
-										+ "\n	* Guest: " + chain.getGuestRegistration().getGuest(res.getGuestID()).getName()
-										+ "\n	* Hotel: " + res.getHotelName());
-		System.out.println("	* Room #" + res.getRoomNumber());
-		// TODO add notification if booked room is BridalSuite
-		System.out.println("	*  " + chain.getReservationManager().calendarToString(res.getStartDate())
-										+ "\n	*   - " + chain.getReservationManager().calendarToString(res.getEndDate()));
+								+ "\n	* Guest: " + chain.getGuestRegistration().getGuest(res.getGuestID()).getName()
+								+ "\n	* Hotel: " + res.getHotelName()
+								+ "\n	* Room #" + res.getRoomNumber()	
+								+ "\n	*  " + chain.getReservationManager().calendarToString(res.getStartDate())
+								+ "\n	*   - " + chain.getReservationManager().calendarToString(res.getEndDate()));
 		System.out.println("	**********************");
 	}
 	
@@ -302,8 +303,9 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		case 1: 
 			System.out.println("> Enter name: ");
 			String nameEntered = getUserInput();
-			int guestIDfound = chain.getGuestRegistration().findGuestID(nameEntered);
-			reservationID = chain.getReservationManager().findReservationID(guestIDfound);
+			int guestIDfound = showFindGuestID(nameEntered);
+			reservationID = showFindReservationID(guestIDfound);
+			//reservationID = chain.getReservationManager().findReservationID(guestIDfound);
 			break;
 		case 2:
 			System.out.println("> Enter reservation ID: ");
@@ -324,11 +326,37 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	}
 	
 	/**
+	 * Finds a reservation ID based on a given guest ID. If multiple matches, asks for reservation selection.
+	 * @param guestID Guest ID to use as search criterium for reservation.
+	 * @return Returns a reservation ID as indicated by user input.
+	 */
+	private int showFindReservationID(int guestID)
+	{
+		ArrayList<Reservation> resFound = chain.getReservationManager().findReservationID(guestID);
+		int resID = -1;
+		if(resFound.size() == 1)
+			resID = resFound.get(0).getID();
+		else if(resFound.size() > 1)
+		{
+			for(int i=0; i<resFound.size(); i++)
+			{
+				printReservation(resFound.get(i));
+				if(promptInputConfirmation(true))
+				{
+					resID = resFound.get(i).getID();
+					i = resFound.size();
+				}
+			}
+		}
+		return resID;
+	}
+	
+	/**
 	 * Displays the Cancel Reservation screen of this interface.
 	 */
 	private void showCancelReservation()
 	{
-		//TODO choose between choose all or find reservation
+		//Can be substituted with showFindReservation()
 		displayReservationsInformation();
 		
 		System.out.println("> Please enter ID of reservation to be cancelled: ");

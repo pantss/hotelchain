@@ -54,13 +54,27 @@ public class HotelChainTextInterface extends TextInterface
 		Hotel[] hotels = chain.getHotels();
 		
 		printHeader("About " + chain.getName());
-		
-		System.out.println(" | Hotel" + "          " + "No. of Rooms");
+		String out = " | Hotel" + "		" + "No. of Rooms";
+		for(int i=out.length(); i < 23; i++)
+			out = out.concat(" ");
+		out = out.concat("|");
+		System.out.println(out);
 		printSingleLine();
 		
-		//TODO: Calculate number of spaces needed for correct column alignment
 		for(int i=0; i<hotels.length;i++)
-			System.out.println(" | " + hotels[i].getName() + "          " + hotels[i].getNumberOfRooms());	
+		{
+			String out2 = " | " + hotels[i].getName();
+			
+			
+			for(int j = out2.length(); j<27; j++)
+				out2 = out2.concat(" ");			
+			
+			out2 = out2.concat(" " + hotels[i].getNumberOfRooms());	
+			for(int k=out2.length(); k < 37; k++)
+				out2 = out2.concat(" ");
+			out2 = out2.concat("|");
+			System.out.println(out2);
+		}
 		printDoubleLine();
 	}	
 }

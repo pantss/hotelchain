@@ -52,22 +52,19 @@ public class GuestRegistration extends FileHandler
 	}
 	
 	/**
-	 * Finds a guest's ID number based on their name.
+	 * Finds a guest's ID number based on (part of) their name.
 	 * @param name Name given to match guest ID number to
 	 * @return Returns guest ID belong to the given name or null of no match was found.
-	 * 
-	 * TODO  Finds guest ID based on NAME ONLY (returns first match only)
-	 * TODO Find guest based on part of name
-	 * TODO Present multiple results and choose
 	 */
-	public int findGuestID(String name)
+	public ArrayList<Guest> findGuestID(String name)
 	{
+		ArrayList<Guest> hits = new ArrayList<Guest>();
 		if(name!=null)
 			for(int i=0;i<guests.size();i++)
-				if(guests.get(i).getName().equalsIgnoreCase(name))
-					return guests.get(i).getID();					
+				if(guests.get(i).getName().toLowerCase().contains(name.toLowerCase()))
+					hits.add(guests.get(i));
 				
-		return -1;		
+		return hits;		
 	}	
 	
 	/**

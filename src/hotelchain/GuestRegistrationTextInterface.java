@@ -1,5 +1,7 @@
 package hotelchain;
 
+import java.util.ArrayList;
+
 /**
  * Provides a text-based user interface towards a Hotel Chain's guest registration system.
  * Extends TextInterface for basic text-based user interface functionality.
@@ -57,6 +59,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 	
 	/**
 	 * Displays the Guests Information screen of this interface.
+	 *TODO Add concat to right column border
 	 */
 	protected void displayGuestsInformation()
 	{
@@ -97,7 +100,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 			case 1: 	
 				System.out.println("> Enter name: ");
 				String nameEntered = getUserInput();
-				guestID = chain.getGuestRegistration().findGuestID(nameEntered);
+				guestID = showFindGuestID(nameEntered);		
 				break;
 			case 2:
 				System.out.println("> Enter guest ID: ");
@@ -118,10 +121,34 @@ public class GuestRegistrationTextInterface extends TextInterface
 	}
 	
 	/**
+	 * Finds a guest ID based on a given name. If multiple matches, asks for guest selection.
+	 * @param nameEntered Name of guest to be found
+	 * @return Returns a guest ID as indicated by user input.
+	 */
+	protected int showFindGuestID(String nameEntered)
+	{
+		ArrayList<Guest> guestsFound = chain.getGuestRegistration().findGuestID(nameEntered);
+		int guestID = -1;
+		if(guestsFound.size() == 1)
+			guestID = guestsFound.get(0).getID();
+		else if(guestsFound.size() > 1)
+		{
+			for(int i=0; i<guestsFound.size(); i++)
+			{
+				printGuestInfo(guestsFound.get(i), true);
+				if(promptInputConfirmation(true))
+				{
+					guestID = guestsFound.get(i).getID();
+					i=guestsFound.size();
+				}
+			}
+		}
+		return guestID;
+	}
+	
+	/**
 	 * Displays the Add New Guest screen of this interface. 
 	 * @param showHeader Indicates whether the header of this screen should be printed.
-	 * 
-	 * TODO Cancel while entering info
 	 */
 	private void showAddNewGuest(boolean showHeader)
 	{
@@ -168,7 +195,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 	 */
 	private void showRemoveGuest()
 	{
-		//TODO choose between choose all or find guest
+		//Can be substituted with showFindGuests() 
 		displayGuestsInformation();
 		
 		System.out.println("> Please enter ID of guest to be removed: ");

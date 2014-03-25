@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
  * The variable filename may be adapted to reflect a desired file name.
  * @author Joost Janssen
  * 
- * TODO aadd clean cancelled/past res. option (w/ write to file)
+ * TODO add clean cancelled/past res. option (w/ write to file)
  */
 public class ReservationManager extends FileHandler
 {
@@ -131,17 +131,16 @@ public class ReservationManager extends FileHandler
 	 * Finds the ID number of the reservation made by the Guest with the given guest ID.
 	 * @param guestID Guest ID number.
 	 * @return Returns the ID number of the reservation made by the Guest with given guestID. Returns -1 if no reservation was found.
-	 * 
-	 * TODO find more than 1 reservation if guest has more than 1.
 	 */
-	public int findReservationID(int guestID)
+	public ArrayList<Reservation> findReservationID(int guestID)
 	{
+		ArrayList<Reservation> hits = new ArrayList<Reservation>();
 		if(guestID>-1)
 			for(int i=0; i<reservations.size(); i++)
 				if(reservations.get(i).getGuestID() == guestID)
-					return reservations.get(i).getID();
+					hits.add(reservations.get(i));
 		
-		return -1;
+		return hits;
 	}
 
 	
@@ -168,7 +167,4 @@ public class ReservationManager extends FileHandler
 	{
 		return reservations.size();
 	}
-	
-	
-	//TODO printOccupationStatistics()
 }
