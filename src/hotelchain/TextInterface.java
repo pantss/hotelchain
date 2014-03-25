@@ -150,7 +150,7 @@ public class TextInterface
 	{
 		System.out.println();
 		printDoubleLine();
-		System.out.println(concatenateEastBorder(" | " + header, 37));
+		System.out.println(addEastBorderTo(" | " + header, 37, "|"));
 		printDoubleLine();
 	}
 	
@@ -160,13 +160,35 @@ public class TextInterface
 	 * @param fill Amount of whitespace needed to fill.
 	 * @return Returns the given String filled with whitespace and a following "|".
 	 * TODO Let fill make sense.
-	 * TODO Check for out length, add extra return if necessary 
 	 */
-	protected String concatenateEastBorder(String out, int fill)
+	protected String addEastBorderTo(String out, int fill, String add)
 	{
 		for(int i=out.length(); i < fill; i++)
 			out = out.concat(" ");
-		out = out.concat("|");
+		
+		if(out.length()>fill)
+		{
+			int charCtr = 0;
+			
+			int i;
+			for(i=0; charCtr < 2; i++)
+			{
+				if(out.charAt(i) != ' ')
+					charCtr++;
+			}
+			String prefix = out.substring(0, i-1);
+			String text = out.substring(i-1);
+			String[] split = text.split(" ");
+			split[0] = prefix.concat(split[0]);
+			for(int j=1; j<split.length-1; j++)
+				split[0] = split[0].concat(" " + split[j]);
+			String newLineString = "\n";
+			newLineString = newLineString.concat(prefix.concat(" " + split[split.length-1]));
+			out = addEastBorderTo(split[0], fill, add);
+			out = out.concat(addEastBorderTo(newLineString, fill+1, add));
+		}
+		else
+			out = out.concat(add);
 		return out;
 	}
 		
@@ -190,7 +212,6 @@ public class TextInterface
 	 * Capitalizes every first letter of each word of a given String.
 	 * @param string String to be capitalized.
 	 * @return Returns a new String with each word's first letter Capitalized.
-	 * TODO if par. is null
 	 */
 	protected String capitalize(String string)
 	{
@@ -201,7 +222,8 @@ public class TextInterface
 			if(Character.isSpaceChar(chars[i]))
 				if(Character.isLetter(chars[i+1]))
 					chars[i+1] = Character.toUpperCase(chars[i+1]);
-		
-		return new String(chars);
+		if(chars.length> 0)
+			return new String(chars);
+		return "";
 	}
 }
