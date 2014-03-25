@@ -35,6 +35,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 											"Reserve a Room",
 											"Find a Reservation",											
 											"Cancel a Reservation",
+											"Clean Reservations",
 											"Go Back"};
 		
 		printHeader("RESERVATION MANAGEMENT");
@@ -48,8 +49,30 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		case 2: showReserveRoom(); break;
 		case 3: showFindReservation(); break;
 		case 4: showCancelReservation(); break;
+		case 5: showCleanReservations(); break;
 		default: exitRequested = true;
 		}
+	}
+	
+	private void showCleanReservations()
+	{
+		ArrayList<Reservation> pastAndCancelledReservations = chain.getReservationManager().getPastAndCancelledReservations();
+		for(int i=0; i<pastAndCancelledReservations.size();i++)
+		{
+			printReservation(pastAndCancelledReservations.get(i));
+			System.out.println("> Are you sure you want to move this reservation to the archive?");
+			if(!promptInputConfirmation(false))
+				pastAndCancelledReservations.remove(i);		
+		}
+		if(pastAndCancelledReservations.size() > 0)
+		{
+			if(chain.getReservationManager().moveReservationsToArchive(pastAndCancelledReservations))
+				System.out.println("! Indicated reservation(s) successfully moved to archive.");
+			else
+				System.out.println("! There was an error moving reservations to archive.");
+		}
+		else
+			System.out.println("! No reservations were removed.");
 	}
 	
 	/**
@@ -301,6 +324,8 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		System.out.println(addEastBorderTo( "	* Room #" + res.getRoomNumber()	, 23, "*"));
 		System.out.println(addEastBorderTo( "	*  " + chain.getReservationManager().calendarToString(res.getStartDate()), 23, "*"));
 		System.out.println(addEastBorderTo( "	*   - " + chain.getReservationManager().calendarToString(res.getEndDate()), 23, "*"));
+		if(res.isCancelled())
+			System.out.println(addEastBorderTo( "	* ! CANCELLED", 23, "*"));
 		System.out.println("	***********************");
 	}	
 	

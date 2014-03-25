@@ -23,6 +23,7 @@ public class HotelChainTextInterface extends TextInterface
 
 	/**
 	 * Displays the first screen of this interface.
+	 * TODO Pass chains?
 	 */
 	private void showFirstLevelOptionMenu()
 	{	

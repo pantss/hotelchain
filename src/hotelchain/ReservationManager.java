@@ -9,8 +9,7 @@ import java.text.SimpleDateFormat;
  * Extends the FileHandler class in order to be able to store guest registration information to a file. 
  * The variable filename may be adapted to reflect a desired file name.
  * @author Joost Janssen
- * 
- * TODO add clean cancelled/past res. option (w/ write to file)
+ * TODO add pricing
  */
 public class ReservationManager extends FileHandler
 {
@@ -22,6 +21,8 @@ public class ReservationManager extends FileHandler
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd yyyy");
 	
 	private final static String filename = "reservations";
+	private final static String archive_filename = "reservationsArchive";
+	private FileHandler archiveFile;
 	
 	/**
 	 * Constructs a new instance of a reservation manager managing reservations at the given Hotels.
@@ -41,6 +42,8 @@ public class ReservationManager extends FileHandler
 		reservationIDcounter = getIDcounter();
 		
 		passUpcomingReservationsToHotels();
+		
+		archiveFile = new FileHandler(archive_filename);
 	}
 	
 	/**
@@ -93,7 +96,44 @@ public class ReservationManager extends FileHandler
 		}
 		return null;
 	}	
+
+	/**
+	 * @return Returns an ArrayList of Reservations that where either cancelled or whose end date is before the current date.
+	 */
+	public ArrayList<Reservation> getPastAndCancelledReservations()
+	{
+		ArrayList<Reservation> pastReservations = new ArrayList<Reservation>();
+		for(int i=0; i<reservations.size(); i++)
+			if(reservations.get(i).isCancelled() || reservations.get(i).getEndDate().before(currentDate))
+				pastReservations.add(reservations.get(i));
+		
+		return pastReservations;
+	}
 	
+	/**
+	 * Moves a given ArrayList of Reservations the archive by removing its Reservations from the list of current reservations. Writes archive to file.
+	 * @param oldReservations ArrayList of Reservations to be moved to archive.
+	 * @return Returns whether the given ArrayList was successfully moved to archive.
+	 */
+	@SuppressWarnings("unchecked")
+	public boolean moveReservationsToArchive(ArrayList<Reservation> oldReservations)
+	{
+		for(int i=0; i<oldReservations.size();i++)
+			reservations.remove(oldReservations.get(i));
+		if(!writeFile(reservations, reservationIDcounter))
+			return false;
+		
+		ArrayList<Reservation> archive = (ArrayList<Reservation>)archiveFile.readFile();
+		if(archive != null)
+			archive.addAll(oldReservations);
+		else
+			archive = oldReservations;
+		
+		if(archiveFile.writeFile(archive, archive.size()))
+			return true;
+		
+		return false;		
+	}
 	/**
 	 * Cancels a given Reservation.
 	 * @param reservation Reservation to be cancelled.

@@ -75,7 +75,7 @@ public class TextInterface
 		{
 			System.out.println(" " + i + ": " + options[i-1]);
 		}
-		System.out.println(" -------------");
+		System.out.println(" ------------");
 		if(options.length<10)
 			System.out.println(" " + 9 +": " + options[options.length-1]);
 		else
@@ -155,18 +155,17 @@ public class TextInterface
 	}
 	
 	/**
-	 * Returns a given string, filled with a given amount of whitespace and followed by a "|".
+	 * Returns a given string, filled with a given amount of whitespace and followed by String add.
 	 * @param out String to add east border symbol to.
 	 * @param fill Amount of whitespace needed to fill.
-	 * @return Returns the given String filled with whitespace and a following "|".
-	 * TODO Let fill make sense.
+	 * @return Returns the given String filled with whitespace followed by String add.
 	 */
-	protected String addEastBorderTo(String out, int fill, String add)
+	protected String addEastBorderTo(String out, int fillTo, String add)
 	{
-		for(int i=out.length(); i < fill; i++)
+		for(int i=out.length(); i < fillTo; i++)
 			out = out.concat(" ");
 		
-		if(out.length()>fill)
+		if(out.length()>fillTo)
 		{
 			int charCtr = 0;
 			
@@ -184,8 +183,8 @@ public class TextInterface
 				split[0] = split[0].concat(" " + split[j]);
 			String newLineString = "\n";
 			newLineString = newLineString.concat(prefix.concat(" " + split[split.length-1]));
-			out = addEastBorderTo(split[0], fill, add);
-			out = out.concat(addEastBorderTo(newLineString, fill+1, add));
+			out = addEastBorderTo(split[0], fillTo, add);
+			out = out.concat(addEastBorderTo(newLineString, fillTo+1, add));
 		}
 		else
 			out = out.concat(add);
@@ -197,7 +196,7 @@ public class TextInterface
 	 */
 	protected void printSingleLine()
 	{
-		System.out.println(" | ----------------------------------|");
+		System.out.println(" | --------------------------------- |");
 	}
 	
 	/**
