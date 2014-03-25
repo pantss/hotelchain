@@ -1,6 +1,10 @@
-Repo contents:
+INSTRUCTIONS
+Download hotelchain.jar and execute "java -jar hotelchain.jar" in a console to run application.
 
-doc/ Javadoc folder
-src/ Source folder
-hotelchain.jar Runnable JAR file of package. Execute "java -jar hotelchain.jar" in a console to run application.
+CONTENTS
+./doc/ - Javadoc folder
+./src/ - Source folder
+./hotelchain.jar - Runnable JAR file of package. 
 
+HELP
+See ./doc/index.html for Javadoc.
