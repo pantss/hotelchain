@@ -97,20 +97,12 @@ public class GuestRegistration extends FileHandler
 	public boolean removeGuest(Guest guest)
 	{
 		if(guest!=null)
-		{	guests.remove(guest);
-		/*	for(int i=0;i<guests.size();i++)
-			{	
-				Guest g = guests.get(i);
-				if(g.getID() == ID)
-				{
-					guests.remove(g);
-				*/
+		{
+			guests.remove(guest);
+			
 			if(writeFile(guests, guestIDcounter))
 				return true;
-			else
-				return false;
-		}
-			
+		}			
 	
 		return false;		
 	}

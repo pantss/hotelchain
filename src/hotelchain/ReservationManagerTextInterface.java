@@ -50,8 +50,8 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			if(r!=null)
 			{
 				printSingleLine();
-				System.out.println(" | " + r.getID() + ": " + r.getGuest().getName() + "(" + r.getGuest().getID() + ")"
-						+ "\n | 	at " + r.getHotel().getName() +  ", Room #" + r.getRoom().getRoomNumber()
+				System.out.println(" | " + r.getID() + ": " + chain.getGuestRegistration().getGuest(r.getGuestID()).getName() + "(" + r.getGuestID() + ")"
+						+ "\n | 	at " + r.getHotelName() +  ", Room #" + r.getRoomNumber()
 						+ "\n | 	 " + chain.getReservationManager().calendarToString(r.getStartDate()) 
 							+ "\n |  	 - " + chain.getReservationManager().calendarToString(r.getEndDate()));
 				if(r.isCancelled())
@@ -137,7 +137,6 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	
 	private Calendar showGetDesiredDate(String time)
 	{
-	//	currentDate = chain.getReservationManager().getCurrentDate();		
 		System.out.println("> Please enter the desired date of " + time + " (\"Month dd yyyy\" or \"Month dd\")");		
 		String input = getUserInput();
 		Calendar desiredDate= convertInputToDate(input);
@@ -147,8 +146,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	
 	private boolean showGetBridalDesired(Hotel hotel, Calendar startDate, Calendar endDate)
 	{
-		// TODO FIX DOUBLE booking
-			System.out.println("> Would you like to book the bridal suite?");
+		System.out.println("> Would you like to book the bridal suite (if available)?");
 			 return promptInputConfirmation(false);
 		
 	}
@@ -167,12 +165,14 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 				return null;
 			
 			String yearString = split[2];
+			
 			if(yearString.length()!=4)
 				return null;
 			year = Integer.parseInt(yearString);			
 		}
 				
 		String dayString = split[1];
+		
 		if(dayString.length()>2 || dayString.length() < 1)
 			return null;
 		int day = Integer.parseInt(dayString);
@@ -225,12 +225,10 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		System.out.println("	 Result:");
 		System.out.println("	**********************");
 		System.out.println("	* Reservation ID: " + res.getID()
-										+ "\n	* Guest: " + res.getGuest().getName()
-										+ "\n	* Hotel: " + res.getHotel().getName());
-		if(res.getRoom().getClass().equals(BridalSuite.class))
-			System.out.println("	* Room: Bridal Suite");
-		else
-			System.out.println("	* Room #" + res.getRoom().getRoomNumber());
+										+ "\n	* Guest: " + chain.getGuestRegistration().getGuest(res.getGuestID()).getName()
+										+ "\n	* Hotel: " + res.getHotelName());
+		System.out.println("	* Room #" + res.getRoomNumber());
+		// TODO add notification if booked room is BridalSuite
 		System.out.println("	*  " + chain.getReservationManager().calendarToString(res.getStartDate())
 										+ "\n	*   - " + chain.getReservationManager().calendarToString(res.getEndDate()));
 		System.out.println("	**********************");
@@ -255,7 +253,8 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		case 1: 
 			System.out.println("> Enter name: ");
 			String nameEntered = getUserInput();
-			reservationID = chain.getReservationManager().findReservationID(nameEntered);
+			int guestIDfound = chain.getGuestRegistration().findGuestID(nameEntered);
+			reservationID = chain.getReservationManager().findReservationID(guestIDfound);
 			break;
 		case 2:
 			System.out.println("> Enter reservation ID: ");

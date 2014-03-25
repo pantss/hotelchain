@@ -141,7 +141,6 @@ public class TextInterface
 		printDoubleLine();
 		System.out.println(" | " + header);
 		printDoubleLine();
-		//System.out.println("\n  ====" + header + "=====");
 	}
 	/**
 	 * Capitalizes every first letter of each word of a String and returns this as a new String

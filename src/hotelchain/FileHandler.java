@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class FileHandler 
 {
-//	private ArrayList accounts;
 	private int IDcounter;
 	
 	private final String filename;
@@ -20,14 +19,12 @@ public class FileHandler
 	
 	public FileHandler(String _filename)
 	{
-		//TODO underscoring convention
 		filename= _filename;
 		
 		if(new File(filename).isFile())
 			createNewFile = false;
 		else
-			createNewFile = true;
-	
+			createNewFile = true;	
 	}
 	
 	protected ArrayList<?> readFile()
@@ -46,7 +43,7 @@ public class FileHandler
 				writeFile(accounts, IDcounter);
 			}
 		
-			//catch e | e possible in 1.7
+			//catch e | e possible in java1.7
 		if(!failed)
 			try {
 				accounts =  (ArrayList<?>) inputStream.readObject();
@@ -59,8 +56,7 @@ public class FileHandler
 				System.out.println("There was an error loading the file " + filename);
 				failed = true;
 				e1.printStackTrace();
-			}							
-				
+			}										
 		
 		if(!failed)
 			try {
@@ -74,7 +70,6 @@ public class FileHandler
 
 	protected boolean writeFile(ArrayList<?> accounts, int _IDcounter)
 	{
-		//TODO underscoring convention
 		IDcounter = _IDcounter;
 		boolean failed = false;
 		try {

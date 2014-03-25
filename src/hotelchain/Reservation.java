@@ -5,46 +5,48 @@ import java.util.Calendar;
 
 public class Reservation implements Serializable
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8903154660483910256L;
-	private final Guest guest;
-	private Hotel hotel;
-	private Room room;
 	private Calendar startDate;
 	private Calendar endDate;
 	private final int reservationID;
 	private boolean cancelled;
 	
-	public Reservation(Guest _guest, Hotel resHotel, Room resRoom, Calendar resStartDate, Calendar resEndDate, int ID)
+
+	private final int guestID;
+	private String hotelName;
+	private int roomNumber;
+	
+	public Reservation(int _guestID, String _hotelName, int _roomNumber, Calendar resStartDate, Calendar resEndDate, int resID)
 	{
-		guest = _guest;
-		hotel = resHotel;
-		room = resRoom;
+		guestID = _guestID;
+		hotelName = _hotelName;
+		roomNumber = _roomNumber;
 		startDate = resStartDate;
 		endDate = resEndDate;
-		reservationID = ID;
+		reservationID = resID;
 		cancelled = false;
 	}
 
 	public void cancel()
 	{
-		hotel.cancelReservation(this);
 		cancelled = true;
 	}
-	public Guest getGuest()
+	
+	public String getHotelName()
 	{
-		return guest;
+		return hotelName;
 	}
-	public Hotel getHotel()
+	
+	public int getRoomNumber()
 	{
-		return hotel;
+		return roomNumber;
 	}
-	public Room getRoom()
+	
+	public int getGuestID()
 	{
-		return room;
+		return guestID;
 	}
+	
 	public Calendar getStartDate()
 	{
 		return startDate;

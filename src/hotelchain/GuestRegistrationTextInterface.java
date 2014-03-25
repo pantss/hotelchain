@@ -9,7 +9,6 @@ public class GuestRegistrationTextInterface extends TextInterface
 			init();
 	}
 	
-
 	private void init()
 	{
 		while(!exitRequested)
@@ -44,8 +43,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 	{
 		printHeader("Currently Registered Guests");
 		System.out.println(" | ID |	# of guests: " +  chain.getGuestRegistration().getNumberOfRegisteredGuests());
-	//	printSingleLine();
-
+	
 		for(int i=0; i<chain.getGuestRegistration().getGuestIDcounter(); i++)
 		{
 			Guest g = chain.getGuestRegistration().getGuest(i);
@@ -62,11 +60,10 @@ public class GuestRegistrationTextInterface extends TextInterface
 	private void showFindGuests()
 	{
 		String[] options = { "Name", 			
-											"Guest ID",
-											"Cancel"};	
+						  	"Guest ID",
+							"Cancel"};	
 		
-		printHeader("FIND A GUEST BY");		
-	//	System.out.println("> Find a Guest by");		
+		printHeader("FIND A GUEST BY");			
 		printOptions(options);		
 		int choice = getUserChoice(0,options.length);
 		
@@ -131,7 +128,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 			int guestID = chain.getGuestRegistration().registerNewGuest(name, address, city, country);
 			
 			System.out.println("	*****************"
-					+ "\n	* New guest:\n	* \n	*"
+					+ "\n	* New guest:\n	* \n	* "
 					+ guestID + ": " + name 
 					+ "\n	*****************"); 
 		}
@@ -171,9 +168,9 @@ public class GuestRegistrationTextInterface extends TextInterface
 	{
 		System.out.println("\n	 Result:\n	*****************************");
 		System.out.println("	* Name: " + guest.getName()
-				+ "\n	* Address: " + guest.getAddress()
-				+ "\n	* City: " + guest.getCity()
-				+ "\n	* Country: " + guest.getCountry() );
+						+ "\n	* Address: " + guest.getAddress()
+						+ "\n	* City: " + guest.getCity()
+						+ "\n	* Country: " + guest.getCountry() );
 		if(printID)
 			System.out.println( "	* Guest ID: " + guest.getID());
 		System.out.println("	*****************************");

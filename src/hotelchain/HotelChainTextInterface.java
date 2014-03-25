@@ -6,10 +6,6 @@ public class HotelChainTextInterface extends TextInterface
 	public HotelChainTextInterface(HotelChain _chain)
 	{
 		super(_chain);	
-		
-		//TODO remove FirstLevel[...].java
-	//	showInterface();
-		
 		printHeader("Welcome to " + chain.getName() + ". ");
 		
 		while(!exitRequested)
@@ -21,9 +17,9 @@ public class HotelChainTextInterface extends TextInterface
 	{	
 		//last option must be exit option
 		String[] options = { "About " + chain.getName() + ".", 	
-											"Guest Registration Management.",	
-											"Reservation Manager.",
-											"Exit Menu"};						 
+							"Guest Registration Management.",	
+							"Reservation Manager.",
+							"Exit Menu"};						 
 		printOptions(options);
 			
 		int choice = getUserChoice(0,options.length);
@@ -32,7 +28,7 @@ public class HotelChainTextInterface extends TextInterface
 		{
 			case 1: showAbout(); break;
 			case 2: 
-				new GuestRegistrationTextInterface(chain, true);			break;
+				new GuestRegistrationTextInterface(chain, true); break;
 			case 3:
 				new ReservationManagerTextInterface(chain);	break;
 			default: exitRequested = true; System.out.println("! Exiting interface."); 

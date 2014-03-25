@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
-//TODO add logs for reservations as well as ReservationArchive
+//TODO add logs for reservations as well as ReservationArchive (add clean cancelled/past res. option)
 public class ReservationManager extends FileHandler
 {
 	private ArrayList<Reservation> reservations;
@@ -12,13 +12,15 @@ public class ReservationManager extends FileHandler
 	private int reservationIDcounter;
 	private Calendar currentDate = Calendar.getInstance();	
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd yyyy");
+	private Hotel[] hotels;
 	
 	private final static String filename = "reservations";
 	
 	@SuppressWarnings("unchecked")
-	public ReservationManager()
+	public ReservationManager(Hotel[] _hotels)
 	{
 		super(filename);
+		hotels = _hotels;
 		
 		if(createNewFile())
 			reservations = new ArrayList<Reservation>();
@@ -26,6 +28,8 @@ public class ReservationManager extends FileHandler
 			reservations = (ArrayList<Reservation>)readFile();
 		
 		reservationIDcounter = getIDcounter();
+		
+		passUpcomingReservationsToHotels();
 	}
 	
 	public Reservation reserveRoom(Guest resGuest, Hotel resHotel, Calendar resStartDate, Calendar resEndDate, boolean bridalSuite)
@@ -33,14 +37,7 @@ public class ReservationManager extends FileHandler
 		Reservation reservation = null;
 	
 		if(bridalSuite)
-		{
-			//TODO  TST
-			System.out.println("Bridalsuite=y ");
 			reservation = resHotel.reserveBridalSuite(resGuest, resStartDate, resEndDate, reservationIDcounter);
-
-			//TODO  TST
-			System.out.println("ReservationBridal: " + reservation); 
-		}
 		else
 			reservation = resHotel.reserveRoom(resGuest, resStartDate, resEndDate, reservationIDcounter);
 		
@@ -64,11 +61,12 @@ public class ReservationManager extends FileHandler
 		return null;
 	}
 	
-	public int findReservationID(String name)
+	// TODO find more than 1 reservation if guest has more than 1.
+	public int findReservationID(int guestID)
 	{
-		if(name!=null)
+		if(guestID>-1)
 			for(int i=0; i<reservations.size(); i++)
-				if(reservations.get(i).getGuest().getName().equalsIgnoreCase(name))
+				if(reservations.get(i).getGuestID() == guestID)
 					return reservations.get(i).getID();
 		
 		return -1;
@@ -80,6 +78,9 @@ public class ReservationManager extends FileHandler
 			if(reservation.equals(reservations.get(i)))
 			{
 				reservations.get(i).cancel();
+				for(int j=0; j<hotels.length; j++)
+					if(hotels[j].getName().equals(reservations.get(i).getHotelName()))
+						hotels[j].cancelReservation(reservations.get(i));
 				
 				if(!writeFile(reservations, reservationIDcounter))
 					System.out.println("ERROR: could not remove reservation from file");
@@ -105,27 +106,14 @@ public class ReservationManager extends FileHandler
 	{
 		return reservations.size();
 	}
-	/*
-	 * Printing this instead of passing reservations so as to keep instances of Reservation private.
-	 * 
-	 * TODO build printAll, printComing, printAllNon-Cancelled, either here or in interface
-	 */
-/*	public void printAllReservations()
-	{	
-		for(int i=0; i<reservations.size();i++)
-		{
-			Reservation r = reservations.get(i);
-//TODO TST
-// System.out.println("Reservation: " + r.toString());
-
-			System.out.println(r.getID() + ": " + r.getGuest().getName()
-					+ "\n              from " + calendarToString(r.getStartDate()) + " untill " + calendarToString(r.getEndDate())
-					+ "\nat hotel " + r.getHotel().getName() + ", room no. " + r.getRoom().getRoomNumber());
-			if(r.isCancelled())
-				System.out.println("!!! Reservation was CANCELLED.");
-		}
-		if(reservations.size() == 0)
-			System.out.println("There are currently no reservations.");
+	
+	private void passUpcomingReservationsToHotels()
+	{
+		for(int i=0; i<reservations.size(); i++)
+			if(!reservations.get(i).isCancelled() && currentDate.before(reservations.get(i).getEndDate()))
+				for(int j=0; j<hotels.length; j++)
+					if(hotels[j].getName().equals(reservations.get(i).getHotelName()))
+						hotels[j].addReservation(reservations.get(i));					
 	}
-*/	//TODO printOccupationStatistics()
+	//TODO printOccupationStatistics()
 }

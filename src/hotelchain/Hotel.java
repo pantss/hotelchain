@@ -9,7 +9,7 @@ import java.util.Calendar;
  *	This class is a representation of a hotel. Contains hotel information such as its name and information about its rooms.
  *	Implements Serializable so instances can be stored using the FileHandler class.
  */
-public class Hotel extends FileHandler implements Serializable 
+public class Hotel implements Serializable 
 {
 	private static final long serialVersionUID = 3061856451553104034L;
 	private final int numberOfRooms;
@@ -25,9 +25,8 @@ public class Hotel extends FileHandler implements Serializable
 	 * @param _name Name of this hotel
 	 * @param rooms Number of rooms
 	 */
-	public Hotel(String _nam	e, int rooms)
+	public Hotel(String _name, int rooms)
 	{
-		super(_name.concat("reservations"));
 		name = _name;
 		numberOfRooms = rooms;
 		hotelRooms = new Room[rooms];
@@ -37,11 +36,7 @@ public class Hotel extends FileHandler implements Serializable
 		
 		hotelRooms[hotelRooms.length-1] = new BridalSuite(hotelRooms.length);
 		bridalSuiteNumber = hotelRooms.length;		
-		// TODO read upcoming res from file
-		if(createNewFile())
-			upcomingReservations = new ArrayList<Reservation>();
-		else
-			upcomingReservations = ( ArrayList<Reservation> ) readFile();
+		upcomingReservations = new ArrayList<Reservation>();
 	}
 	
 	/**
@@ -58,11 +53,27 @@ public class Hotel extends FileHandler implements Serializable
 		Room freeRoom = getFreeRoom(startDate, endDate);
 		if(freeRoom!=null)
 		{
-			Reservation reservation = new Reservation(guest, this, freeRoom, startDate, endDate, reservationID);
-			upcomingReservations.add(reservation);
+			Reservation reservation = new Reservation(guest.getID(), this.getName(), freeRoom.getRoomNumber(), startDate, endDate, reservationID);
+			addReservation(reservation);
 			return reservation;
 		}
 		return null;
+	}
+	
+	/**
+	 * Adds a reservation to the upcoming reservations administration of this Hotel.
+	 * 
+	 * @param reservation Reservation to be added to administration of this Hotel.
+	 */
+	public void addReservation(Reservation reservation)
+	{
+		if(reservation != null)
+		{
+			upcomingReservations.add(reservation);
+			System.out.println("Hi! " + this.getName());
+			for(int i=0; i<upcomingReservations.size(); i++)
+				System.out.println("res: " + upcomingReservations.get(i));
+		}
 	}
 	
 	/**
@@ -76,22 +87,15 @@ public class Hotel extends FileHandler implements Serializable
 	 */
 	public Reservation reserveBridalSuite(Guest guest, Calendar startDate, Calendar endDate, int reservationID)
 	{
-
-		//TODO  TST
-		System.out.println("#Hotel Reserve bridal suite");
 		Reservation reservation = null;
 		
 		if(isRoomAvailableBetween(bridalSuiteNumber, startDate, endDate))
-		{
-			//TODO  TST
-			System.out.println("#If bridal suite is available");
-			reservation = new Reservation(guest, this, hotelRooms[bridalSuiteNumber-1], startDate, endDate, reservationID);
-		}
+			reservation = new Reservation(guest.getID(), this.getName(), bridalSuiteNumber, startDate, endDate, reservationID);
 		else
 			 reservation =  reserveRoom(guest, startDate, endDate, reservationID);	
 		
-		upcomingReservations.add(reservation);
-		return 	reservation;		
+		addReservation(reservation);
+		return reservation;		
 	}
 	
 	/**
@@ -132,16 +136,11 @@ public class Hotel extends FileHandler implements Serializable
 	private boolean isRoomAvailableBetween(int roomNr, Calendar startDate, Calendar endDate)
 	{
 		boolean available = true;
-
-		//TODO  TST
-		System.out.println("# checking available. upcomingSize: " + upcomingReservations.size());
+		
 		for(int i=0;i<upcomingReservations.size();i++)
 		{	
-			// TODO TST
-				System.out.println("upcomingres room: " + upcomingReservations.get(i).getRoom()
-									+ "hotelroom: " + hotelRooms[roomNr-1]);
 			
-			if(upcomingReservations.get(i).getRoom().equals(hotelRooms[roomNr-1]))
+			if(upcomingReservations.get(i).getRoomNumber() == roomNr)
 			{
 				if(upcomingReservations.get(i).getStartDate().before(endDate))
 				{	
@@ -152,13 +151,10 @@ public class Hotel extends FileHandler implements Serializable
 				else if(upcomingReservations.get(i).getStartDate().before(endDate))
 					if(!upcomingReservations.get(i).isCancelled())
 						available = false;
-			}
-				
+			}				
 		}
 		return available;
-	}
-	
-	
+	}	
 	
 	/**
 	 * @return Returns the name of this hotel.
