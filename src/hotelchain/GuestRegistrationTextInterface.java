@@ -9,14 +9,17 @@ import java.util.ArrayList;
  */
 public class GuestRegistrationTextInterface extends TextInterface
 {	
+	protected final GuestRegistration guestRegistration;
+
 	/**
-	 * Constructs an instance of a textual guest registration interface towards a given HotelChain. 
-	 * @param _chain HotelChain for which this object provides a textual guest registration interface. 
+	 * Constructs an instance of a textual guest registration interface, extending the basic TextInterface.
+	 * @param _guestRegistration The Guest Registration system this class provides an interface for.
 	 * @param _init Indicates whether this interface should be displayed.
 	 */
-	public GuestRegistrationTextInterface(HotelChain _chain, boolean _init)
+	public GuestRegistrationTextInterface(GuestRegistration _guestRegistration, boolean _init)
 	{
-		super(_chain);
+		super();
+		guestRegistration = _guestRegistration;
 		if(_init)
 			init();
 	}
@@ -63,11 +66,11 @@ public class GuestRegistrationTextInterface extends TextInterface
 	protected void displayGuestsInformation()
 	{
 		printHeader("Currently Registered Guests");
-		System.out.println(addEastBorderTo(" | ID |	# of guests: " +  chain.getGuestRegistration().getNumberOfRegisteredGuests(),37,"|"));
+		System.out.println(addEastBorderTo(" | ID |	# of guests: " +  guestRegistration.getNumberOfRegisteredGuests(),37,"|"));
 	
-		for(int i=0; i<chain.getGuestRegistration().getGuestIDcounter(); i++)
+		for(int i=0; i<guestRegistration.getGuestIDcounter(); i++)
 		{
-			Guest g = chain.getGuestRegistration().getGuest(i);
+			Guest g = guestRegistration.getGuest(i);
 			if(g!=null)
 			{
 				printSingleLine();
@@ -105,14 +108,14 @@ public class GuestRegistrationTextInterface extends TextInterface
 				break;
 			case 2:
 				System.out.println("> Enter guest ID: ");
-				guestID = getUserChoice(0, chain.getGuestRegistration().getIDcounter());
+				guestID = getUserChoice(0, guestRegistration.getIDcounter());
 				break;
 			default: 
 				cancel = true;
 		}
 		if(!cancel)
 		{	
-			Guest guest = chain.getGuestRegistration().getGuest(guestID);
+			Guest guest = guestRegistration.getGuest(guestID);
 			
 			if(guest != null)
 				printGuestInfo(guest, true);
@@ -128,7 +131,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 	 */
 	protected int showFindGuestID(String nameEntered)
 	{
-		ArrayList<Guest> guestsFound = chain.getGuestRegistration().findGuestID(nameEntered);
+		ArrayList<Guest> guestsFound = guestRegistration.findGuestID(nameEntered);
 		int guestID = -1;
 		if(guestsFound.size() == 1)
 			guestID = guestsFound.get(0).getID();
@@ -180,7 +183,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 			
 		if(correct)
 		{
-			int guestID = chain.getGuestRegistration().registerNewGuest(name, address, city, country);
+			int guestID = guestRegistration.registerNewGuest(name, address, city, country);
 			System.out.println("! New guest "+ name + " succesfully added with guest ID number: "+ guestID + "."); 
 		}
 		else
@@ -196,18 +199,18 @@ public class GuestRegistrationTextInterface extends TextInterface
 		displayGuestsInformation();
 		
 		System.out.println("> Please enter ID of guest to be removed: ");
-		int guestID = getUserChoice(0, chain.getGuestRegistration().getIDcounter());
-		Guest guest = chain.getGuestRegistration().getGuest(guestID);
+		int guestID = getUserChoice(0, guestRegistration.getIDcounter());
+		Guest guest = guestRegistration.getGuest(guestID);
 		
 		if(guest != null)
 		{
 			printGuestInfo(guest, true);
-			System.out.println("> Are you sure you want to remove this guest?");
+			System.out.println("> Are you sure you want to remove this guest? (Y/N): ");
 			boolean correct = promptInputConfirmation(false);
 			
 			if(correct)
 			{
-				if(chain.getGuestRegistration().removeGuest(guest))
+				if(guestRegistration.removeGuest(guest))
 					System.out.println("! Guest succesfully removed.");
 			}
 			else		

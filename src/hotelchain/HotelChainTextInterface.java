@@ -7,6 +7,7 @@ package hotelchain;
  */
 public class HotelChainTextInterface extends TextInterface
 {
+	private final HotelChain chain;
 	
 	/**
 	 * Constructs an instance of a textual HotelChain user interface.
@@ -14,7 +15,8 @@ public class HotelChainTextInterface extends TextInterface
 	 */
 	public HotelChainTextInterface(HotelChain _chain)
 	{
-		super(_chain);	
+		super();
+		chain = _chain;
 		printHeader("Welcome to " + chain.getName() + ". ");
 		
 		while(!exitRequested)
@@ -23,7 +25,6 @@ public class HotelChainTextInterface extends TextInterface
 
 	/**
 	 * Displays the first screen of this interface.
-	 * TODO Pass chains?
 	 */
 	private void showFirstLevelOptionMenu()
 	{	
@@ -40,9 +41,9 @@ public class HotelChainTextInterface extends TextInterface
 		{
 			case 1: showAbout(); break;
 			case 2: 
-				new GuestRegistrationTextInterface(chain, true); break;
+				new GuestRegistrationTextInterface(chain.getGuestRegistration(), true); break;
 			case 3:
-				new ReservationManagerTextInterface(chain);	break;
+				new ReservationManagerTextInterface(chain.getReservationManager(), chain.getGuestRegistration());	break;
 			default: exitRequested = true; System.out.println("! Exiting interface."); 
 		}	
 	}

@@ -13,7 +13,7 @@ public class GuestRegistration extends FileHandler
 	private  ArrayList<Guest> guests;
 	private int guestIDcounter;
 	
-	private final static  String filename = "registeredGuests";
+	private final static  String filename = "hotelchain.registeredGuests";
 
 	/**
 	 * Constructs an instance of the guest registration management system.

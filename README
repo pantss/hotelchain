@@ -1,0 +1,6 @@
+Repo contents:
+
+doc/ Javadoc folder
+src/ Source folder
+hotelchain.jar Runnable JAR file of package. Execute "java -jar hotelchain.jar" in a console to run application.
+

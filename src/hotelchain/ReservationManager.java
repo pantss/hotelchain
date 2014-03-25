@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
  * Extends the FileHandler class in order to be able to store guest registration information to a file. 
  * The variable filename may be adapted to reflect a desired file name.
  * @author Joost Janssen
- * TODO add pricing
+ * TODO Future features: pricing, check in/out, read archive if desired3.
  */
 public class ReservationManager extends FileHandler
 {
@@ -20,8 +20,8 @@ public class ReservationManager extends FileHandler
 	private Calendar currentDate = Calendar.getInstance();	
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd yyyy");
 	
-	private final static String filename = "reservations";
-	private final static String archive_filename = "reservationsArchive";
+	private final static String filename = "hotelchain.reservations";
+	private final static String archive_filename = "hotelchain.reservationsArchive";
 	private FileHandler archiveFile;
 	
 	/**
@@ -141,7 +141,7 @@ public class ReservationManager extends FileHandler
 	public void cancelReservation(Reservation reservation)
 	{
 		for(int i=0;i<reservations.size();i++)
-			if(reservation.equals(reservations.get(i)))
+			if(reservation.getID() == reservations.get(i).getID())
 			{
 				reservations.get(i).cancel();
 				for(int j=0; j<hotels.length; j++)
@@ -206,5 +206,13 @@ public class ReservationManager extends FileHandler
 	public int getNumberOfReservations()
 	{
 		return reservations.size();
+	}
+		
+	/**
+	 * @return Returns an array of the hotels managed by this Reservationmanager.
+	 */
+	public Hotel[] getHotels()
+	{
+		return hotels;
 	}
 }

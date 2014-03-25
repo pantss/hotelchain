@@ -10,17 +10,14 @@ import java.io.InputStreamReader;
  */
 public class TextInterface
 {
-	protected HotelChain chain;
 	protected boolean exitRequested;
 	private BufferedReader inputReader;
 		
 	/**
 	 * Constructs a new instance of a text-based HotelChain user interface.
-	 * @param _chain HotelChain for which this object proved a textual interface.
 	 */
-	public TextInterface(HotelChain _chain)
-	{
-		chain = _chain;
+	public TextInterface()
+	{	
 		exitRequested = false;
 		inputReader = new BufferedReader(new InputStreamReader(System.in));
 	}
@@ -157,7 +154,7 @@ public class TextInterface
 	/**
 	 * Returns a given string, filled with a given amount of whitespace and followed by String add.
 	 * @param out String to add east border symbol to.
-	 * @param fill Amount of whitespace needed to fill.
+	 * @param fillTo Amount of whitespace needed to fill.
 	 * @return Returns the given String filled with whitespace followed by String add.
 	 */
 	protected String addEastBorderTo(String out, int fillTo, String add)
