@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/*
+/**
+ * Provides basic functionality of a text-based user interface towards a HotelChain. 
+ * @author Joost Janssen
+ * 
  * TODO: East border of columns
  */
 public class TextInterface
@@ -13,6 +16,10 @@ public class TextInterface
 	protected boolean exitRequested;
 	private BufferedReader inputReader;
 		
+	/**
+	 * Constructs a new instance of a text-based HotelChain user interface.
+	 * @param _chain HotelChain for which this object proved a textual interface.
+	 */
 	public TextInterface(HotelChain _chain)
 	{
 		chain = _chain;
@@ -20,6 +27,11 @@ public class TextInterface
 		inputReader = new BufferedReader(new InputStreamReader(System.in));
 	}
 	
+	/**
+	 * Presents a yes/no confirmation dialog.
+	 * @param printText Indicates whether the dialog text is to be printed.
+	 * @return Returns true or false as indicated by user input.
+	 */
 	protected boolean promptInputConfirmation(boolean printText)
 	{
 		if(printText)
@@ -46,22 +58,41 @@ public class TextInterface
 						System.out.println("! Please give a valid answer.");
 						System.out.println("> Is the above information correct? (Y/N): ");
 					}
-
 				}
-		}
-		
+		}		
 		return correct;	
 	}
 	
 	/**
-	 * Gets user's choice of options displayed.
+	 * Presents a given list of valid user choice options. Last option in the list must be an exit option.
+	 * @param options List of valid user choice options in String format.
+	 */
+	protected void printOptions(String[] options)
+	{
+		
+		System.out.println("\n> Please select an option.");
+		printDoubleLine();
+		
+		for(int i=1; i<options.length; i++)
+		{
+			System.out.println(" " + i + ": " + options[i-1]);
+		}
+		System.out.println(" -------------");
+		if(options.length<10)
+			System.out.println(" " + 9 +": " + options[options.length-1]);
+		else
+			System.out.println("   " + options.length + ": " + options[options.length-1]);
+		printDoubleLine();
+		System.out.println("\n> Your choice: ");
+	}
+	
+	/**
+	 * Presents a user choice input dialog with a given valid choice range.
+	 * @param firstOption Displayed value of first choice of valid choice range.
+	 * @param lastOption Displayed value of last choice of valid choice range.
+	 * @return Returns the choice as indicated by user input.
 	 * 
-	 * @param int firstOption: displayed value of first option in choice menu
-	 * @param int lastOption: displayed value of last option in choice menu
-	 * @return int: displayed value of option chosen
-	 * 
-	 *  firstOption <= lastOption
-	 *  TODO Cancel input
+	 * TODO Cancel input
 	 */
 	protected  int getUserChoice(int firstOption, int lastOption)
 	{
@@ -95,6 +126,10 @@ public class TextInterface
 		return choice;
 	}
 
+	/**
+	 * Presents a user input dialog.
+	 * @return Returns user input.
+	 */
 	protected String getUserInput()
 	{
 		String input = null;
@@ -107,32 +142,12 @@ public class TextInterface
 				input = null;
 				e.printStackTrace();
 			}
-		}
-		
+		}		
 		return input;
 	}	
-
-	protected void printOptions(String[] options)
-	{
-		
-		System.out.println("\n> Please select an option.");
-		printDoubleLine();
-		
-		for(int i=1; i<options.length; i++)
-		{
-			System.out.println(" " + i + ": " + options[i-1]);
-		}
-		System.out.println(" -------------");
-		if(options.length<10)
-			System.out.println(" " + 9 +": " + options[options.length-1]);
-		else
-			System.out.println("   " + options.length + ": " + options[options.length-1]);
-		printDoubleLine();
-		System.out.println("\n> Your choice: ");
-	}
 	
 	/**
-	 * Prints the header String between two short double lines.
+	 * Prints a given header String between two short double lines.
 	 * @param header Text to be printed as header.
 	 */
 	protected void printHeader(String header)
@@ -142,10 +157,27 @@ public class TextInterface
 		System.out.println(" | " + header);
 		printDoubleLine();
 	}
+		
 	/**
-	 * Capitalizes every first letter of each word of a String and returns this as a new String
-	 * @param string: String to be capitalized
-	 * @return a new String with each word's first letter Capitalized
+	 * Prints a single horizontal line to the screen, preceded by " | ".
+	 */
+	protected void printSingleLine()
+	{
+		System.out.println(" | ----------------------------------");
+	}
+	
+	/**
+	 * Prints a double horizontal line to the screen.
+	 */
+	protected void printDoubleLine()
+	{
+		System.out.println("  ===================================");
+	}
+
+	/**
+	 * Capitalizes every first letter of each word of a given String.
+	 * @param string String to be capitalized.
+	 * @return Returns a new String with each word's first letter Capitalized.
 	 */
 	protected String capitalize(String string)
 	{
@@ -158,20 +190,5 @@ public class TextInterface
 					chars[i+1] = Character.toUpperCase(chars[i+1]);
 		
 		return new String(chars);
-	}
-	
-	/**
-	 * Prints a single line on the console, preceded by " | ".
-	 */
-	protected void printSingleLine()
-	{
-		System.out.println(" | ----------------------------------");
-	}
-	/**
-	 * Prints a double line on the console.
-	 */
-	protected void printDoubleLine()
-	{
-		System.out.println("  ===================================");
 	}
 }

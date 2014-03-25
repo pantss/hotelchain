@@ -3,10 +3,9 @@ package hotelchain;
 import java.io.Serializable;
 
 /**
+ * Represents a guest of a hotel. It contains personal identification information of the guest.
+ * Implements Serializable so instances can be stored using the FileHandler class.
  * @author Joost Janssen
- *
- *	This class represents a guest of a hotel. It contains personal identification information of the guest.
- *	Implements Serializable so instances can be stored using the FileHandler class.
  */
 public class Guest  implements Serializable
 {
@@ -34,8 +33,9 @@ public class Guest  implements Serializable
 		guestID = id;
 	}
 	
+
 	/**
-	 * @returns Returns this guest's ID number.
+	 * @return Returns this guest's ID number.
 	 */
 	public int getID()
 	{

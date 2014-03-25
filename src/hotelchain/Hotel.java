@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
+ * Representation of a hotel. Contains hotel information such as its name and information about its rooms.
+ * Implements Serializable so instances can be stored using the FileHandler class.
  * @author Joost Janssen
- *
- *	This class is a representation of a hotel. Contains hotel information such as its name and information about its rooms.
- *	Implements Serializable so instances can be stored using the FileHandler class.
  */
 public class Hotel implements Serializable 
 {
@@ -20,10 +19,9 @@ public class Hotel implements Serializable
 	
 
 	/**
-	 * Constructs an instance of a Hotel.
-	 * 
-	 * @param _name Name of this hotel
-	 * @param rooms Number of rooms
+	 * Constructs an instance of a Hotel. 
+	 * @param _name Name of this hotel.
+	 * @param rooms Number of rooms in this hotel.
 	 */
 	public Hotel(String _name, int rooms)
 	{
@@ -40,13 +38,12 @@ public class Hotel implements Serializable
 	}
 	
 	/**
-	 * Reserves a room in this hotel.
-	 * 
+	 * Reserves a room in this hotel. 
 	 * @param guest Guest to book reservation.
 	 * @param startDate Arrival date of guest.
 	 * @param endDate Departure date of guest.
 	 * @param reservationID Reservation ID number.
-	 * @return Returns an instance of the reserved room.
+	 * @return Returns the resulting Reservation.
 	 */
 	public Reservation reserveRoom(Guest guest, Calendar startDate, Calendar endDate, int reservationID)
 	{
@@ -61,29 +58,22 @@ public class Hotel implements Serializable
 	}
 	
 	/**
-	 * Adds a reservation to the upcoming reservations administration of this Hotel.
-	 * 
-	 * @param reservation Reservation to be added to administration of this Hotel.
+	 * Adds a reservation to the list of upcoming reservations of this Hotel. 
+	 * @param reservation Reservation to be added.
 	 */
 	public void addReservation(Reservation reservation)
 	{
 		if(reservation != null)
-		{
 			upcomingReservations.add(reservation);
-			System.out.println("Hi! " + this.getName());
-			for(int i=0; i<upcomingReservations.size(); i++)
-				System.out.println("res: " + upcomingReservations.get(i));
-		}
 	}
 	
 	/**
 	 * Reserves the bridal suite of this hotel. If bridal suite is unavailable, reserve a normal room at this hotel.
-	 * 
 	 * @param guest Guest to book reservation.
 	 * @param startDate Arrival date of guest.
 	 * @param endDate Departure date of guest.
 	 * @param reservationID Reservation ID number.
-	 * @return Returns an instance of the reserved bridal suite. If bridal suite is unavailable, reserve a normal room at this hotel.
+	 * @return Returns the resulting Reservation of the bridal suite. If bridal suite is unavailable, returns a Reservation of a regular Room.
 	 */
 	public Reservation reserveBridalSuite(Guest guest, Calendar startDate, Calendar endDate, int reservationID)
 	{
@@ -106,15 +96,12 @@ public class Hotel implements Serializable
 	{
 		upcomingReservations.remove(reservation);			
 	}
-	/**
-	 * @return Room freeRoom
-	 */
+	
 	/**
 	 * Finds an unreserved room in this hotel during a given time frame. 
-	 * 
 	 * @param startDate Start date of time frame.
 	 * @param endDate End date of time frame.
-	 * @return Returns an instance of an available Room during the given time frame, or null when none is available.
+	 * @return Returns an available Room during the given time frame, or null when none is available.
 	 */
 	private Room getFreeRoom(Calendar startDate, Calendar endDate)
 	{
@@ -127,7 +114,6 @@ public class Hotel implements Serializable
 	
 	/**
 	 * Checks whether the Room at this hotel with a given roomnumber is available at a given interval.
-	 * 
 	 * @param roomNr Room number
 	 * @param startDate Start date of interval
 	 * @param endDate End date of interval

@@ -1,12 +1,10 @@
 package hotelchain;
 /**
+ * Main class of the HotelChain application. Contains chain and hotel information 
+ * as well as its guest and registration management systems.
+ * int NUMBER_OF_HOTELS, String[] hotelNames and  int[] roomsInHotel can be adapted
+ * to reflect chain's current situation.
  * @author Joost Janssen
- *  
- *		Main class of the HotelChain application. Contains chain and hotel information 
- *		as well as its guest and registration management systems.
- *
- *		 int NUMBER_OF_HOTELS, String[] hotelNames and  int[] roomsInHotel can be adapted
- *		to reflect chain's current situation.
  */
 public class HotelChain 
 {	
@@ -20,10 +18,9 @@ public class HotelChain
 	private final int[] roomsInHotel = new int[] { 60, 60, 80 };
 	
 	/**
-	 * @param _name Name of hotel chain
-	 * 
-	 * Constructs an instance of the HotelChain class and creates instances
-	 * of its guest registration and reservation manager systems.
+	 * Constructs an instance of a HotelChain and creates instances of its guest registration and 
+	 * reservation manager systems.
+	 * @param _name Name of this HotelChain.
 	 */
 	public HotelChain(String _name)
 	{
@@ -36,7 +33,7 @@ public class HotelChain
 	}
 	
 	/**
-	 * Populates the hotel chain with its hotels.
+	 * Populates this hotel chain with its hotels.
 	 */
 	private void addHotels()
 	{
@@ -45,7 +42,7 @@ public class HotelChain
 	}
 	
 	/**
-	 * @return Returns a string representation of the hotel chain's name.
+	 * @return Returns a string representation of this hotel chain's name.
 	 */
 	public String getName()
 	{
@@ -53,7 +50,7 @@ public class HotelChain
 	}
 	
 	/**
-	 * @return Returns a Hotelarray containing this chain's hotels.
+	 * @return Returns an array of this HotelChain's Hotels.
 	 */
 	public Hotel[] getHotels()
 	{
@@ -69,7 +66,7 @@ public class HotelChain
 	}
 	
 	/**
-	 * @return REturns this chain's GuestRegistration system.
+	 * @return Returns this chain's GuestRegistration system.
 	 */
 	public GuestRegistration getGuestRegistration()
 	{

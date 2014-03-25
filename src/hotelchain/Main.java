@@ -1,13 +1,13 @@
 package hotelchain;
 
 /**
+ * Initializes the HotelChain application.
  * @author Joost Janssen
- *	 Initializes the HotelChain application
  */
 public class Main {
 	/**
-	 *  Initializes the HotelChain application and its interface
-	 * @param args: arguments to be passed to application
+	 * Initializes the HotelChain application and its interface.
+	 * @param args Arguments to be passed to application.
 	 */
 	public static void main(String[] args)
 	{		

@@ -1,21 +1,37 @@
 package hotelchain;
 
+/**
+ * Provides a text-based user interface towards a Hotel Chain's guest registration system.
+ * Extends TextInterface for basic text-based user interface functionality.
+ * @author Joost Janssen
+ */
 public class GuestRegistrationTextInterface extends TextInterface
 {	
-	public GuestRegistrationTextInterface(HotelChain _chain, boolean init)
+	/**
+	 * Constructs an instance of a textual guest registration interface towards a given HotelChain. 
+	 * @param _chain HotelChain for which this object provides a textual guest registration interface. 
+	 * @param _init Indicates whether this interface should be displayed.
+	 */
+	public GuestRegistrationTextInterface(HotelChain _chain, boolean _init)
 	{
 		super(_chain);
-		if(init)
+		if(_init)
 			init();
 	}
 	
+	/**
+	 * Initializes this interface.
+	 */
 	private void init()
 	{
 		while(!exitRequested)
-			showGuestRegistration();		
+			showFirstLevelOptionMenu();		
 	}
 	
-	private void showGuestRegistration()
+	/**
+	 * Displays the first screen of this interface.
+	 */
+	private void showFirstLevelOptionMenu()
 	{
 		//Last option in array must be exit option
 		String[] options = {"General information about guests." ,	
@@ -39,6 +55,9 @@ public class GuestRegistrationTextInterface extends TextInterface
 		}		
 	}
 	
+	/**
+	 * Displays the Guests Information screen of this interface.
+	 */
 	protected void displayGuestsInformation()
 	{
 		printHeader("Currently Registered Guests");
@@ -57,6 +76,9 @@ public class GuestRegistrationTextInterface extends TextInterface
 		printDoubleLine();
 	}
 	
+	/**
+	 * Displays the Find Guests screen of this interface.
+	 */
 	private void showFindGuests()
 	{
 		String[] options = { "Name", 			
@@ -94,7 +116,13 @@ public class GuestRegistrationTextInterface extends TextInterface
 				System.out.println("! Guest not found.");		
 		}
 	}
-	//TODO Cancel while entering info
+	
+	/**
+	 * Displays the Add New Guest screen of this interface. 
+	 * @param showHeader Indicates whether the header of this screen should be printed.
+	 * 
+	 * TODO Cancel while entering info
+	 */
 	private void showAddNewGuest(boolean showHeader)
 	{
 		if(showHeader)
@@ -124,7 +152,6 @@ public class GuestRegistrationTextInterface extends TextInterface
 			
 		if(correct)
 		{
-			// guestID acquired by registering new guest using collected information
 			int guestID = chain.getGuestRegistration().registerNewGuest(name, address, city, country);
 			
 			System.out.println("	*****************"
@@ -136,6 +163,9 @@ public class GuestRegistrationTextInterface extends TextInterface
 			showAddNewGuest(false);		
 	}	
 	
+	/**
+	 * Displays the Remove Guest screen of this interface.
+	 */
 	private void showRemoveGuest()
 	{
 		//TODO choose between choose all or find guest
@@ -161,9 +191,14 @@ public class GuestRegistrationTextInterface extends TextInterface
 		}
 		else
 			System.out.println("! Error: Guest could not be found.");
-		showGuestRegistration();
+		showFirstLevelOptionMenu();
 	}
 	
+	/**
+	 * Prints the registered information of a given Guest.
+	 * @param guest Guest to print information of.
+	 * @param printID Indicates whether the Guests's guestID should be printed.
+	 */
 	protected void printGuestInfo(Guest guest, boolean printID)
 	{
 		System.out.println("\n	 Result:\n	*****************************");

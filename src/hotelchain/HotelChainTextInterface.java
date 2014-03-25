@@ -1,8 +1,17 @@
 package hotelchain;
 
+/**
+ * Represents the main menu of the HoteChain text-based user interface.
+ * Extends TextInterface for basic text-based user interface functionality. 
+ * @author Joost Janssen
+ */
 public class HotelChainTextInterface extends TextInterface
 {
 	
+	/**
+	 * Constructs an instance of a textual HotelChain user interface.
+	 * @param _chain HotelChain for which this class presents a textual interface.
+	 */
 	public HotelChainTextInterface(HotelChain _chain)
 	{
 		super(_chain);	
@@ -10,9 +19,11 @@ public class HotelChainTextInterface extends TextInterface
 		
 		while(!exitRequested)
 			showFirstLevelOptionMenu();
-	}
-	
+	}	
 
+	/**
+	 * Displays the first screen of this interface.
+	 */
 	private void showFirstLevelOptionMenu()
 	{	
 		//last option must be exit option
@@ -35,6 +46,9 @@ public class HotelChainTextInterface extends TextInterface
 		}	
 	}
 	
+	/**
+	 * Displays the About screen of this interface.
+	 */
 	private void showAbout()
 	{
 		Hotel[] hotels = chain.getHotels();

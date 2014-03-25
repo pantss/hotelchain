@@ -2,11 +2,9 @@ package hotelchain;
 import java.io.Serializable;
 
 /**
+ * Represents of a room in a hotel with a certain room number 
+ * Implements Serializable so instances can be stored using the FileHandler class.
  * @author Joost Janssen
- * 
- * 	This class is a representation of a room in a hotel. It contains room information 
- * 	as well as details of its reservation.
- *		Implements Serializable so instances can be stored using the FileHandler class.
  */
 public class Room implements Serializable 
 {
@@ -14,7 +12,7 @@ public class Room implements Serializable
 	private int roomNumber;
 	
 	/**
-	 * Constructs an instance of a room in a hotel. 
+	 * Constructs an instance of a room.
 	 * @param room Room number of this room.
 	 */
 	public Room(int room)
@@ -23,7 +21,7 @@ public class Room implements Serializable
 	}	
 	
 	/**
-	 * @return Returns this room's room number.
+	 * @return Returns this room's number.
 	 */
 	public int getRoomNumber()
 	{

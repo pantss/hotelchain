@@ -2,11 +2,20 @@ package hotelchain;
 
 import java.util.Calendar;
 
+/**
+ * Provides a text-based user interface towards a HotelChain's reservation management system.
+ * Extends GuestRegistrationTextInterface as this class extends a GuestRegistrationTextInterface with reservation management options.
+ * @author Joost Janssen
+ */
 public class ReservationManagerTextInterface extends GuestRegistrationTextInterface
 {
 	private boolean exitRequested;
 	private Calendar currentDate;
 	
+	/**
+	 * Constructs an instance of a textual reservation management interface towards a given HotelChain. 
+	 * @param _chain HotelChain for which this class provides a textual reservation management interface.
+	 */
 	public ReservationManagerTextInterface(HotelChain _chain)
 	{
 	   super(_chain, false);
@@ -15,6 +24,9 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			showReservationManager();
 	}	
 	
+	/**
+	 * Displays the first screen of this interface.
+	 */
 	private void showReservationManager()
 	{
 		//Last option in array must be exit option
@@ -39,6 +51,9 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		}
 	}
 	
+	/**
+	 * Displays the Reservations Information screen of this interface.
+	 */
 	private void displayReservationsInformation()
 	{
 		printHeader("All Reservations");
@@ -61,6 +76,9 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		printDoubleLine();
 	}
 	
+	/**
+	 * Displays the Reserve Room screen of this interface.
+	 */
 	private void showReserveRoom()
 	{		
 		//TODO choose between choose all or find guest
@@ -82,30 +100,29 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			{
 				chosenHotel = showChooseHotel();
 				if(chosenHotel != null)
-					{
-						
-						System.out.println("Today is: " +chain.getReservationManager().calendarToString(currentDate));		
-						startDate = showGetDesiredDate("arrival");
-						endDate = showGetDesiredDate("departure");
-						boolean bridalDesired = showGetBridalDesired(chosenHotel, startDate, endDate);			
-						
-						Reservation newReservation = chain.getReservationManager().reserveRoom(guest, chosenHotel, startDate, endDate, bridalDesired);
+				{						
+					System.out.println("Today is: " +chain.getReservationManager().calendarToString(currentDate));		
+					startDate = showGetDesiredDate("arrival");
+					endDate = showGetDesiredDate("departure");
+					boolean bridalDesired = showGetBridalDesired(chosenHotel, startDate, endDate);			
 					
-						if(newReservation != null)
-						{
-							printReservation(newReservation);
-							
-							if(promptInputConfirmation(true))
-								System.out.println("! Reservation booked succesfully!");
-							else
-							{
-									chain.getReservationManager().cancelReservation(newReservation);
-									System.out.println("! Reservation cancelled.");
-							}							
-						}
+					Reservation newReservation = chain.getReservationManager().reserveRoom(guest, chosenHotel, startDate, endDate, bridalDesired);
+				
+					if(newReservation != null)
+					{
+						printReservation(newReservation);
+						
+						if(promptInputConfirmation(true))
+							System.out.println("! Reservation booked succesfully!");
 						else
-							System.out.println("! There was an error booking this reservation.");					
-					}					
+						{
+								chain.getReservationManager().cancelReservation(newReservation);
+								System.out.println("! Reservation cancelled.");
+						}							
+					}
+					else
+						System.out.println("! There was an error booking this reservation.");					
+				}					
 			}
 			else
 				System.out.println("! No guest selected.");				
@@ -116,6 +133,10 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		showReservationManager();		
 	}
 	
+	/**
+	 * Displays the Choose Hotel screen of this interface.
+	 * @return Returns the Hotel indicated by user input.
+	 */
 	private Hotel showChooseHotel()
 	{
 		Hotel[] hotels = chain.getHotels();
@@ -135,6 +156,11 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		return hotels[choice-1];	
 	}
 	
+	/**
+	 * Displays the Indicate Desired Date screen of this interface.
+	 * @param time The current date.
+	 * @return Returns the desired date as indicated by user input.
+	 */
 	private Calendar showGetDesiredDate(String time)
 	{
 		System.out.println("> Please enter the desired date of " + time + " (\"Month dd yyyy\" or \"Month dd\")");		
@@ -144,6 +170,13 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		return desiredDate;
 	}
 	
+	/**
+	 * Displays the Indicate Bridalsuite Desired screen of this interface.
+	 * @param hotel Desired Hotel to be reserved. 
+	 * @param startDate Desired start date of reservation.
+	 * @param endDate Desired end date of reservation.
+	 * @return Returns whether the bridal suite is desired as indicated by user input.
+	 */
 	private boolean showGetBridalDesired(Hotel hotel, Calendar startDate, Calendar endDate)
 	{
 		System.out.println("> Would you like to book the bridal suite (if available)?");
@@ -151,6 +184,11 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		
 	}
 	
+	/**
+	 * Converts a given user input to a date in Calendar format.
+	 * @param input User input.
+	 * @return Returns a date in Calendar format. 
+	 */
 	private Calendar convertInputToDate(String input)
 	{
 		String[] split = input.split(" ");
@@ -185,9 +223,13 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		return newDate;
 	}
 	
+	/**
+	 * Returns a Calendar representation of a given month.
+	 * @param monthString String representation of a month.
+	 * @return Returns a Calendar representation of a given month.
+	 */
 	private int getMonth(String monthString)
-	{
-	
+	{	
 		if(monthString.equalsIgnoreCase("january"))
 		     return Calendar.JANUARY;	
 		else if(monthString.equalsIgnoreCase("february"))
@@ -220,6 +262,10 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		return -1;		
 	}
 	
+	/**
+	 * Prints information of a given Reseration to the screen.
+	 * @param res Reservation whose information is to be printed.
+	 */
 	private void printReservation(Reservation res)
 	{
 		System.out.println("	 Result:");
@@ -234,6 +280,9 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		System.out.println("	**********************");
 	}
 	
+	/**
+	 * Displays the Find Reservation screen of this interface.
+	 */
 	private void showFindReservation()
 	{
 		String[] options = { "Name",
@@ -274,6 +323,9 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		}
 	}
 	
+	/**
+	 * Displays the Cancel Reservation screen of this interface.
+	 */
 	private void showCancelReservation()
 	{
 		//TODO choose between choose all or find reservation

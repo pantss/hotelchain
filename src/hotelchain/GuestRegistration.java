@@ -3,12 +3,10 @@ package hotelchain;
 import java.util.ArrayList;
 
 /**
- * @author Joost Janssen
- * 
- * This class manages the administration of guests of a hotel chain.
- * Extends the FileHandler class in order to be able to store guest registration information to a file.
- * 
+ * Manages the administration of guests of a hotel chain.
+ * Extends the FileHandler class in order to be able to store guest registration information to a file. 
  * The variable filename may be adapted to reflect a desired file name.
+ * @author Joost Janssen
  */
 public class GuestRegistration extends FileHandler
 {
@@ -32,8 +30,7 @@ public class GuestRegistration extends FileHandler
 			guests = (ArrayList<Guest>)readFile();
 
 		guestIDcounter = getIDcounter();
-	}		
-
+	}
 	
 	/**
 	 * Registers a new guest of the hotel chain given their personal information and returns its guest ID number.
@@ -75,9 +72,9 @@ public class GuestRegistration extends FileHandler
 	
 	/**
 	 * Finds a guest based on their guest ID number.
+	 * Note: assumes there can be no duplicate IDs
 	 * @param guestID Guest ID number 
-	 * @return Returns the guest whose ID number was given or null of no match was found.
-	 *  	Note: assumes there can be no duplicate IDs
+	 * @return Returns the guest whose ID number was given or null of no match was found. 	
 	 */
 	public Guest getGuest(int guestID)
 	{
@@ -90,9 +87,9 @@ public class GuestRegistration extends FileHandler
 	}	
 
 	/**
-	 * Removes a guests' information from the hotel chain's systems given a guest ID number.
-	 * @param ID Guest ID number
-	 * @return Returns whether the guest indicated by the given ID number has been successfully removed.
+	 * Removes a given guest's information from the hotel chain's systems.
+	 * @param guest Guest to be removed.
+	 * @return Returns whether the guest was successfully removed.
 	 */
 	public boolean removeGuest(Guest guest)
 	{
@@ -102,8 +99,7 @@ public class GuestRegistration extends FileHandler
 			
 			if(writeFile(guests, guestIDcounter))
 				return true;
-		}			
-	
+		}				
 		return false;		
 	}
 		
