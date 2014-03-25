@@ -59,7 +59,6 @@ public class GuestRegistrationTextInterface extends TextInterface
 	
 	/**
 	 * Displays the Guests Information screen of this interface.
-	 *TODO Add concat to right column border
 	 */
 	protected void displayGuestsInformation()
 	{
@@ -72,8 +71,10 @@ public class GuestRegistrationTextInterface extends TextInterface
 			if(g!=null)
 			{
 				printSingleLine();
-				System.out.println(" | " + g.getID() + ": " + g.getName()
-						+ "\n |    " + g.getAddress() + ", " + g.getCity() + ", " + g.getCountry());			
+				String out = " | " + g.getID() + ": " + g.getName();
+				System.out.println(concatenateEastBorder(out, 37));
+				String out2 = " |    " + g.getAddress() + ", " + g.getCity() + ", " + g.getCountry();
+				System.out.println(concatenateEastBorder(out2, 37));
 			}				
 		}
 		printDoubleLine();

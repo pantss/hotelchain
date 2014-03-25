@@ -54,7 +54,6 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	
 	/**
 	 * Displays the Reservations Information screen of this interface.
-	 * TODO concat to right column border
 	 */
 	private void displayReservationsInformation()
 	{
@@ -67,12 +66,16 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			if(r!=null)
 			{
 				printSingleLine();
-				System.out.println(" | " + r.getID() + ": " + chain.getGuestRegistration().getGuest(r.getGuestID()).getName() + "(" + r.getGuestID() + ")"
-						+ "\n | 	at " + r.getHotelName() +  ", Room #" + r.getRoomNumber()
-						+ "\n | 	 " + chain.getReservationManager().calendarToString(r.getStartDate()) 
-							+ "\n |  	 - " + chain.getReservationManager().calendarToString(r.getEndDate()));
+				String out = " | " + r.getID() + ": " + chain.getGuestRegistration().getGuest(r.getGuestID()).getName() + "(" + r.getGuestID() + ")";
+				System.out.println(out = concatenateEastBorder(out, 37));
+				String out2 = " | 	at " + r.getHotelName() +  ", Room #" + r.getRoomNumber();
+				System.out.println(concatenateEastBorder(out2, 33));
+				String out3 = " | 	 " + chain.getReservationManager().calendarToString(r.getStartDate());
+				System.out.println(concatenateEastBorder(out3, 33));
+				String out4 = " |  	 - " + chain.getReservationManager().calendarToString(r.getEndDate());
+				System.out.println(concatenateEastBorder(out4, 34));
 				if(r.isCancelled())
-					System.out.println(" | ! This reservation was CANCELLED.");
+					System.out.println(concatenateEastBorder(" | ! This reservation was CANCELLED.", 37));
 			}
 		}		
 		printDoubleLine();
@@ -267,6 +270,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	/**
 	 * Prints information of a given Reservation to the screen.
 	 * @param res Reservation whose information is to be printed.
+	 * TODO concat stars
 	 */
 	private void printReservation(Reservation res)
 	{

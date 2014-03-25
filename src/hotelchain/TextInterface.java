@@ -7,8 +7,6 @@ import java.io.InputStreamReader;
 /**
  * Provides basic functionality of a text-based user interface towards a HotelChain. 
  * @author Joost Janssen
- * 
- * TODO: East border of columns
  */
 public class TextInterface
 {
@@ -152,12 +150,24 @@ public class TextInterface
 	{
 		System.out.println();
 		printDoubleLine();
-		String out = " | " + header;
-		for(int i=out.length(); i < 37; i++)
+		System.out.println(concatenateEastBorder(" | " + header, 37));
+		printDoubleLine();
+	}
+	
+	/**
+	 * Returns a given string, filled with a given amount of whitespace and followed by a "|".
+	 * @param out String to add east border symbol to.
+	 * @param fill Amount of whitespace needed to fill.
+	 * @return Returns the given String filled with whitespace and a following "|".
+	 * TODO Let fill make sense.
+	 * TODO Check for out length, add extra return if necessary 
+	 */
+	protected String concatenateEastBorder(String out, int fill)
+	{
+		for(int i=out.length(); i < fill; i++)
 			out = out.concat(" ");
 		out = out.concat("|");
-		System.out.println(out);
-		printDoubleLine();
+		return out;
 	}
 		
 	/**
@@ -180,6 +190,7 @@ public class TextInterface
 	 * Capitalizes every first letter of each word of a given String.
 	 * @param string String to be capitalized.
 	 * @return Returns a new String with each word's first letter Capitalized.
+	 * TODO if par. is null
 	 */
 	protected String capitalize(String string)
 	{

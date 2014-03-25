@@ -55,25 +55,18 @@ public class HotelChainTextInterface extends TextInterface
 		
 		printHeader("About " + chain.getName());
 		String out = " | Hotel" + "		" + "No. of Rooms";
-		for(int i=out.length(); i < 23; i++)
-			out = out.concat(" ");
-		out = out.concat("|");
-		System.out.println(out);
+		System.out.println(concatenateEastBorder(out, 23));
 		printSingleLine();
 		
 		for(int i=0; i<hotels.length;i++)
 		{
 			String out2 = " | " + hotels[i].getName();
 			
-			
 			for(int j = out2.length(); j<27; j++)
 				out2 = out2.concat(" ");			
 			
 			out2 = out2.concat(" " + hotels[i].getNumberOfRooms());	
-			for(int k=out2.length(); k < 37; k++)
-				out2 = out2.concat(" ");
-			out2 = out2.concat("|");
-			System.out.println(out2);
+			System.out.println(concatenateEastBorder(out2, 37));
 		}
 		printDoubleLine();
 	}	
