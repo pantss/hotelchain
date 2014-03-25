@@ -7,4 +7,4 @@ CONTENTS
 ./hotelchain.jar - Runnable JAR file of package. 
 
 HELP
-See <html><a href="./doc/index.html">Javadoc</html></a>.
+See ./doc/index.html for Javadoc.
