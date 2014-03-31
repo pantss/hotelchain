@@ -8,6 +8,8 @@ package hotelchain;
 public class HotelChainTextInterface extends TextInterface
 {
 	private final HotelChain chain;
+	private GuestRegistrationTextInterface guestRegistrationTextInterface;
+	private ReservationManagerTextInterface reservationManagerTextInterface;
 	
 	/**
 	 * Constructs an instance of a textual HotelChain user interface.
@@ -17,6 +19,9 @@ public class HotelChainTextInterface extends TextInterface
 	{
 		super();
 		chain = _chain;
+		
+		guestRegistrationTextInterface = new GuestRegistrationTextInterface(chain.getGuestRegistration());
+		reservationManagerTextInterface = new ReservationManagerTextInterface(chain.getReservationManager(), chain.getGuestRegistration());
 		printHeader("Welcome to " + chain.getName() + ". ");
 		
 		while(!exitRequested)
@@ -33,18 +38,20 @@ public class HotelChainTextInterface extends TextInterface
 							"Guest Registration Management.",	
 							"Reservation Manager.",
 							"Exit Menu"};						 
-		printOptions(options);
+		printOptions(options, true);
 			
 		int choice = getUserChoice(0,options.length);
 		
 		switch(choice)
 		{
-			case 1: showAbout(); break;
-			case 2: 
-				new GuestRegistrationTextInterface(chain.getGuestRegistration(), true); break;
-			case 3:
-				new ReservationManagerTextInterface(chain.getReservationManager(), chain.getGuestRegistration());	break;
-			default: exitRequested = true; System.out.println("! Exiting interface."); 
+			case 1: 
+				showAbout(); break;
+			case 2:
+				guestRegistrationTextInterface.init(); break;
+			case 3: 
+				reservationManagerTextInterface.init(); break;
+			default: 
+				exitRequested = true; System.out.println("! Exiting interface."); 
 		}	
 	}
 	
@@ -56,8 +63,8 @@ public class HotelChainTextInterface extends TextInterface
 		Hotel[] hotels = chain.getHotels();
 		
 		printHeader("About " + chain.getName());
-		String out = " | Hotel" + "		" + "No. of Rooms";
-		System.out.println(addEastBorderTo(out, 23, "|"));
+		String out = " | Hotel" + "                " + "No. of Rooms";
+		System.out.println(addEastBorderTo(out, "|"));
 		printSingleLine();
 		
 		for(int i=0; i<hotels.length;i++)
@@ -68,7 +75,7 @@ public class HotelChainTextInterface extends TextInterface
 				out2 = out2.concat(" ");			
 			
 			out2 = out2.concat(" " + hotels[i].getNumberOfRooms());	
-			System.out.println(addEastBorderTo(out2, 37, "|"));
+			System.out.println(addEastBorderTo(out2, "|"));
 		}
 		printDoubleLine();
 	}	

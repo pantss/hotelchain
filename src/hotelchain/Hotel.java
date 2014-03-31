@@ -14,7 +14,7 @@ public class Hotel implements Serializable
 	private final int numberOfRooms;
 	private final String name;
 	private final Room[] hotelRooms;
-	private final int bridalSuiteNumber;	
+	private final int bridalSuiteNumber;
 	private ArrayList<Reservation> upcomingReservations;
 	
 
@@ -50,7 +50,7 @@ public class Hotel implements Serializable
 		Room freeRoom = getFreeRoom(startDate, endDate);
 		if(freeRoom!=null)
 		{
-			Reservation reservation = new Reservation(guest.getID(), this.getName(), freeRoom.getRoomNumber(), startDate, endDate, reservationID);
+			Reservation reservation = new Reservation(guest.getID(), this.getName(), freeRoom.getRoomNumber(), startDate, endDate, false, reservationID);
 			addReservation(reservation);
 			return reservation;
 		}
@@ -80,7 +80,7 @@ public class Hotel implements Serializable
 		Reservation reservation = null;
 		
 		if(isRoomAvailableBetween(bridalSuiteNumber, startDate, endDate))
-			reservation = new Reservation(guest.getID(), this.getName(), bridalSuiteNumber, startDate, endDate, reservationID);
+			reservation = new Reservation(guest.getID(), this.getName(), bridalSuiteNumber, startDate, endDate, true, reservationID);
 		else
 			 reservation =  reserveRoom(guest, startDate, endDate, reservationID);	
 		

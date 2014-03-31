@@ -49,10 +49,7 @@ public class TextInterface
 						valid = true;
 					
 					if(!valid)
-					{
 						System.out.println("! Please give a valid answer.");
-						System.out.println("> Is the above information correct? (Y/N): ");
-					}
 				}
 		}		
 		return correct;	
@@ -62,10 +59,10 @@ public class TextInterface
 	 * Presents a given list of valid user choice options. Last option in the list must be an exit option.
 	 * @param options List of valid user choice options in String format.
 	 */
-	protected void printOptions(String[] options)
+	protected void printOptions(String[] options, boolean printText)
 	{
-		
-		System.out.println("\n> Please select an option.");
+		if(printText)
+			System.out.println("\n> Please select an option.");
 		printDoubleLine();
 		
 		for(int i=1; i<options.length; i++)
@@ -85,7 +82,7 @@ public class TextInterface
 	 * Presents a user choice input dialog with a given valid choice range.
 	 * @param firstOption Displayed value of first choice of valid choice range.
 	 * @param lastOption Displayed value of last choice of valid choice range.
-	 * @return Returns the choice as indicated by user input.
+	 * @return Returns the choice as indicated by user input. Returns -1 if no number was entered.
 	 */
 	protected  int getUserChoice(int firstOption, int lastOption)
 	{
@@ -107,6 +104,7 @@ public class TextInterface
 			}
 			catch(NumberFormatException e)	{
 				choice = -1;
+				break;
 			}
 	
 			if(choice == 9 || (choice >= firstOption && choice <= lastOption))
@@ -147,22 +145,22 @@ public class TextInterface
 	{
 		System.out.println();
 		printDoubleLine();
-		System.out.println(addEastBorderTo(" | " + header, 37, "|"));
+		System.out.println(addEastBorderTo(" | " + header, "|"));
 		printDoubleLine();
 	}
 	
 	/**
-	 * Returns a given string, filled with a given amount of whitespace and followed by String add.
+	 * Returns a given string, fills it out to a limit "eastBorderIndex," followed by String add.
 	 * @param out String to add east border symbol to.
-	 * @param fillTo Amount of whitespace needed to fill.
-	 * @return Returns the given String filled with whitespace followed by String add.
+	 * @return Returns the given String filled with whitespace followed by border "add".
 	 */
-	protected String addEastBorderTo(String out, int fillTo, String add)
+	protected String addEastBorderTo(String out, String add)
 	{
-		for(int i=out.length(); i < fillTo; i++)
+		final int eastBorderIndex = 37;
+		for(int i=out.length(); i < eastBorderIndex; i++)
 			out = out.concat(" ");
 		
-		if(out.length()>fillTo)
+		if(out.length()>eastBorderIndex)
 		{
 			int charCtr = 0;
 			
@@ -173,23 +171,24 @@ public class TextInterface
 					charCtr++;
 			}
 			String prefix = out.substring(0, i-1);
-			String text = out.substring(i-1);
-			String[] split = text.split(" ");
-			split[0] = prefix.concat(split[0]);
-			for(int j=1; j<split.length-1; j++)
-				split[0] = split[0].concat(" " + split[j]);
-			String newLineString = "\n";
-			newLineString = newLineString.concat(prefix.concat(" " + split[split.length-1]));
-			out = addEastBorderTo(split[0], fillTo, add);
-			out = out.concat(addEastBorderTo(newLineString, fillTo+1, add));
-		}
+			int splitIndex = 0;
+			for(int j= eastBorderIndex-2; j>=0; j--)
+				if(out.startsWith(" ", j))
+				{
+					splitIndex = j;
+					j=-1;
+				}
+			String firstLine = addEastBorderTo(out.substring(0, splitIndex), add);
+			String secondLine = addEastBorderTo(prefix.concat(out.substring(splitIndex, out.length())), add);
+			out = firstLine.concat("\n" + secondLine);
+			}
 		else
 			out = out.concat(add);
 		return out;
 	}
 		
 	/**
-	 * Prints a single horizontal line to the screen, preceded by " | ".
+	 * Prints a single horizontal line to the screen, bordered by " | "s.
 	 */
 	protected void printSingleLine()
 	{

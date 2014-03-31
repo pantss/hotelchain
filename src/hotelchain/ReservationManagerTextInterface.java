@@ -21,12 +21,19 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	 */
 	public ReservationManagerTextInterface(ReservationManager _reservationManager, GuestRegistration _guestRegistration)//HotelChain _chain)
 	{
-	   super(_guestRegistration, false);
+	   super(_guestRegistration);
 	   reservationManager = _reservationManager;
 	   currentDate = reservationManager.getCurrentDate();
-		while(!exitRequested)
-			showReservationManager();
 	}	
+	
+	/**
+	 * Initializes this interface.
+	 */
+	public void init()
+	{
+		while(!exitRequested)
+			showReservationManager();		
+	}
 	
 	/**
 	 * Displays the first screen of this interface.
@@ -43,7 +50,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		
 		printHeader("RESERVATION MANAGEMENT");
 		
-		printOptions(options);
+		printOptions(options, true);
 		int choice = getUserChoice(0, options.length);
 		
 		switch(choice)
@@ -87,7 +94,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	private void displayReservationsInformation()
 	{
 		printHeader("All Reservations");
-		System.out.println(addEastBorderTo(" | ID | # of reservations: " + reservationManager.getNumberOfReservations(), 37, "|"));
+		System.out.println(addEastBorderTo(" | ID | # of reservations: " + reservationManager.getNumberOfReservations(), "|"));
 		
 		for(int i=0; i<reservationManager.getReservationIDcounter(); i++)
 		{
@@ -95,16 +102,20 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			if(r!=null)
 			{
 				printSingleLine();
-				String out = " | " + r.getID() + ": " + guestRegistration.getGuest(r.getGuestID()).getName() + "(" + r.getGuestID() + ")";
-				System.out.println(out = addEastBorderTo(out, 37, "|"));
-				String out2 = " | 	at " + r.getHotelName() +  ", Room #" + r.getRoomNumber();
-				System.out.println(addEastBorderTo(out2, 33, "|"));
-				String out3 = " | 	 " + reservationManager.calendarToString(r.getStartDate());
-				System.out.println(addEastBorderTo(out3, 33, "|"));
-				String out4 = " |  	 - " + reservationManager.calendarToString(r.getEndDate());
-				System.out.println(addEastBorderTo(out4, 34, "|"));
+				String out = " | " + r.getID() + ": " + guestRegistration.getGuest(r.getGuestID()).getName() + " (" + r.getGuestID() + ")";
+				System.out.println(out = addEastBorderTo(out, "|"));
+				String out2 = " |  at " + r.getHotelName();
+				if(r.isBridalSuite())
+					out2 = out2.concat(", the Bridal Suite");
+				else
+					out2 = out2.concat(", Room #" + r.getRoomNumber());
+				System.out.println(addEastBorderTo(out2, "|"));
+				String out3 = " |  " + reservationManager.calendarToString(r.getStartDate());
+				System.out.println(addEastBorderTo(out3, "|"));
+				String out4 = " |    - " + reservationManager.calendarToString(r.getEndDate());
+				System.out.println(addEastBorderTo(out4, "|"));
 				if(r.isCancelled())
-					System.out.println(addEastBorderTo(" | ! This reservation was CANCELLED.", 37, "|"));
+					System.out.println(addEastBorderTo(" | ! This reservation was CANCELLED.", "|"));
 			}
 		}		
 		printDoubleLine();
@@ -114,7 +125,12 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	 * Displays the Reserve Room screen of this interface.
 	 */
 	private void showReserveRoom()
-	{		
+	{	
+		if(guestRegistration.getNumberOfRegisteredGuests() < 1)
+		{
+			System.out.println("! Please register a guest first:");
+			showAddNewGuest(false);			
+		}
 		//Can be substituted with showFindGuests (needs to be made protected then)
 		displayGuestsInformation();
 		
@@ -127,7 +143,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		
 		if(guest != null)
 		{
-			printGuestInfo(guest, true);
+			printSingleGuestInfo(guest, true);
 			boolean correct = promptInputConfirmation(true);
 			
 			if(correct)
@@ -136,12 +152,13 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 				if(chosenHotel != null)
 				{						
 					System.out.println("Today is: " +reservationManager.calendarToString(currentDate));		
-					startDate = showGetDesiredDate("arrival");
-					endDate = showGetDesiredDate("departure");
+					startDate = showGetDesiredDate("Arrival");
+					endDate = showGetDesiredDate("Departure");
+					
 					boolean bridalDesired = showGetBridalDesired(chosenHotel, startDate, endDate);			
 					
 					Reservation newReservation = reservationManager.reserveRoom(guest, chosenHotel, startDate, endDate, bridalDesired);
-				
+					
 					if(newReservation != null)
 					{
 						printReservation(newReservation);
@@ -163,8 +180,6 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		}
 		else
 			System.out.println("! Error: Guest could not be found.");
-		
-		showReservationManager();		
 	}
 	
 	/**
@@ -178,8 +193,10 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		
 		printHeader("FIND A RESERVATION");
 		System.out.println("> Find a reservation by");
-		printOptions(options);
-		int choice = getUserChoice(0,options.length);
+		printOptions(options, false);
+		int choice = -1;
+		while(choice == -1)
+			choice = getUserChoice(0,options.length);
 		
 		int reservationID = -1;
 		boolean cancel = false;
@@ -189,12 +206,25 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		case 1: 
 			System.out.println("> Enter name: ");
 			String nameEntered = getUserInput();
-			int guestIDfound = showFindGuestID(nameEntered);
-			reservationID = showFindReservationID(guestIDfound);
+			if(!nameEntered.isEmpty())
+			{
+				int guestIDfound = showFindGuestID(nameEntered, true);
+				reservationID = showFindReservationID(guestIDfound);
+			}
+			else
+			{
+				showFindReservation();
+				cancel = true;				
+			}
 			break;
 		case 2:
 			System.out.println("> Enter reservation ID: ");
 			reservationID = getUserChoice(0, reservationManager.getIDcounter());
+			if(reservationID == -1)
+			{
+				showFindReservation();
+				cancel = true;
+			}
 			break;
 		default:
 			cancel = true;
@@ -213,7 +243,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	/**
 	 * Finds a reservation ID based on a given guest ID. If multiple matches, asks for reservation selection.
 	 * @param guestID Guest ID to use as search criterium for reservation.
-	 * @return Returns a reservation ID as indicated by user input.
+	 * @return Returns a reservation ID as indicated by user input. Returns -1 if no reservation was found, -99 if multiple reservations were found and displayed
 	 */
 	private int showFindReservationID(int guestID)
 	{
@@ -264,7 +294,6 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		}
 		else
 			System.out.println("! Error: Reservation could not be found.");
-	showReservationManager();
 	}	
 	/**
 	 * Displays the Choose Hotel screen of this interface.
@@ -278,9 +307,11 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		for(int i=0; i<hotels.length; i++)
 			options[i] = hotels[i].getName();
 		options[options.length-1] = "Cancel";		
-		printOptions(options);
+		printOptions(options, true);
 		
-		int choice = getUserChoice(0,options.length);
+		int choice = -1;
+		while(choice == -1)
+			choice = getUserChoice(0,options.length);
 		if(choice == 9)
 		{
 			System.out.println("! Cancelled.");
@@ -293,12 +324,19 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	 * Displays the Indicate Desired Date screen of this interface.
 	 * @param time The current date.
 	 * @return Returns the desired date as indicated by user input.
+	 * 
+	 * TODO Fix date input formatting (slashes?)
 	 */
 	private Calendar showGetDesiredDate(String time)
 	{
-		System.out.println("> Please enter the desired date of " + time + " (\"Month dd yyyy\" or \"Month dd\")");		
-		String input = getUserInput();
-		Calendar desiredDate= convertInputToDate(input);
+		System.out.println("> Please enter the desired date of " + time + " (\"mm/dd\" or \"mm/dd/yyyy\")");		
+		Calendar desiredDate = null;
+		while(desiredDate == null)
+		{
+			String input = getUserInput();
+			desiredDate= convertInputToDate(input);
+		}
+		System.out.println("Date entered: " + reservationManager.calendarToString(desiredDate));
 		
 		return desiredDate;
 	}
@@ -322,17 +360,20 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	 */
 	private void printReservation(Reservation res)
 	{
-		System.out.println("	 Result:");
-		System.out.println("	***********************");
-		System.out.println(addEastBorderTo("	* Reservation ID: " + res.getID(), 23, "*"));
-		System.out.println(addEastBorderTo( "	* Guest: " + guestRegistration.getGuest(res.getGuestID()).getName(), 23, "*"));
-		System.out.println(addEastBorderTo( "	* Hotel: " + res.getHotelName(), 23, "*"));
-		System.out.println(addEastBorderTo( "	* Room #" + res.getRoomNumber()	, 23, "*"));
-		System.out.println(addEastBorderTo( "	*  " + reservationManager.calendarToString(res.getStartDate()), 23, "*"));
-		System.out.println(addEastBorderTo( "	*   - " + reservationManager.calendarToString(res.getEndDate()), 23, "*"));
+		System.out.println("\n	 Result:\n	******************************");
+		System.out.println(addEastBorderTo("        * Reservation ID: " + res.getID(), "*"));
+		System.out.println(addEastBorderTo("        * -------------------------- ", "*"));
+		System.out.println(addEastBorderTo("        *  " + guestRegistration.getGuest(res.getGuestID()).getName(), "*"));
+		System.out.println(addEastBorderTo("        * "+ res.getHotelName(), "*"));
+		if(res.isBridalSuite())
+			System.out.println(addEastBorderTo("        * Room: Bridal Suite", "*"));
+		else
+			System.out.println(addEastBorderTo( "        * Room #" + res.getRoomNumber(), "*"));
+		System.out.println(addEastBorderTo( "        *  " + reservationManager.calendarToString(res.getStartDate()), "*"));
+		System.out.println(addEastBorderTo( "        *   - " + reservationManager.calendarToString(res.getEndDate()), "*"));
 		if(res.isCancelled())
-			System.out.println(addEastBorderTo( "	* ! CANCELLED", 23, "*"));
-		System.out.println("	***********************");
+			System.out.println(addEastBorderTo("        * ! CANCELLED", "*"));
+		System.out.println("	******************************");
 	}	
 	
 	/**
@@ -342,13 +383,11 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	 */
 	private Calendar convertInputToDate(String input)
 	{
-		String[] split = input.split(" ");
+		String[] split = input.split("/");
 		
 		int year = currentDate.get(Calendar.YEAR);
 		
-		if(split.length == 2)
-				System.out.println("! Assuming year is " + year);
-		else 
+		if(split.length != 2) 
 		{
 			if(split.length > 3 || split.length < 2)
 				return null;
@@ -366,50 +405,21 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			return null;
 		int day = Integer.parseInt(dayString);
 		
-		String monthString = split[0];
-		int month = getMonth(monthString);
+		int month = -1;
+		
+		try{
+			month =  Integer.parseInt(split[0]);
+		}
+		catch (NumberFormatException e)	{
+			return null;
+		}
+		
+		if(month > 12 || month < 1)
+			return null;
+		
 		Calendar newDate = Calendar.getInstance();
-		newDate.set(year, month, day, 0, 0, 0);
+		newDate.set(year, month-1, day, 0, 0, 0);
 	
 		return newDate;
-	}
-	
-	/**
-	 * Returns a Calendar representation of a given month.
-	 * @param monthString String representation of a month.
-	 * @return Returns a Calendar representation of a given month.
-	 */
-	private int getMonth(String monthString)
-	{	
-		if(monthString.equalsIgnoreCase("january"))
-		     return Calendar.JANUARY;	
-		else if(monthString.equalsIgnoreCase("february"))
-			return Calendar.FEBRUARY;
-		else if(monthString.equalsIgnoreCase("march"))
-				return Calendar.MARCH;
-		else if(monthString.equalsIgnoreCase("april"))
-			return Calendar.APRIL;
-		else if(monthString.equalsIgnoreCase("may"))
-			return  Calendar.MAY;
-		else if(monthString.equalsIgnoreCase("june"))
-			return Calendar.JUNE;
-		else if(monthString.equalsIgnoreCase("july"))
-				return Calendar.JULY;
-		else if(monthString.equalsIgnoreCase("august"))
-				return Calendar.AUGUST;
-		else if(monthString.equalsIgnoreCase("september"))
-			return Calendar.SEPTEMBER;
-		else if(monthString.equalsIgnoreCase("october"))
-			return Calendar.OCTOBER;
-		else if(monthString.equalsIgnoreCase("november"))
-			return Calendar.NOVEMBER;
-		else if(monthString.equalsIgnoreCase("december"))
-			return Calendar.DECEMBER;
-		else
-			{
-				System.out.println("> Please enter a correct month: ");
-				getMonth(getUserInput());
-			}	
-		return -1;		
 	}
 }

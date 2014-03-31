@@ -16,27 +16,25 @@ public class GuestRegistrationTextInterface extends TextInterface
 	 * @param _guestRegistration The Guest Registration system this class provides an interface for.
 	 * @param _init Indicates whether this interface should be displayed.
 	 */
-	public GuestRegistrationTextInterface(GuestRegistration _guestRegistration, boolean _init)
+	public GuestRegistrationTextInterface(GuestRegistration _guestRegistration)
 	{
 		super();
 		guestRegistration = _guestRegistration;
-		if(_init)
-			init();
 	}
 	
 	/**
 	 * Initializes this interface.
 	 */
-	private void init()
+	public void init()
 	{
 		while(!exitRequested)
-			showFirstLevelOptionMenu();		
+			showGuestRegistration();		
 	}
 	
 	/**
 	 * Displays the first screen of this interface.
 	 */
-	private void showFirstLevelOptionMenu()
+	private void showGuestRegistration()
 	{
 		//Last option in array must be exit option
 		String[] options = {"General information about guests." ,	
@@ -47,7 +45,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 		
 		printHeader("GUEST REGISTRATION MANAGEMENT");
 		
-		printOptions(options);				
+		printOptions(options, true);				
 		int choice = getUserChoice(0,options.length);
 		
 		switch(choice)
@@ -66,7 +64,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 	protected void displayGuestsInformation()
 	{
 		printHeader("Currently Registered Guests");
-		System.out.println(addEastBorderTo(" | ID |	# of guests: " +  guestRegistration.getNumberOfRegisteredGuests(),37,"|"));
+		System.out.println(addEastBorderTo(" | ID |	# of guests: " +  guestRegistration.getNumberOfRegisteredGuests(), "|"));
 	
 		for(int i=0; i<guestRegistration.getGuestIDcounter(); i++)
 		{
@@ -74,11 +72,12 @@ public class GuestRegistrationTextInterface extends TextInterface
 			if(g!=null)
 			{
 				printSingleLine();
-				String out = " | " + g.getID() + ": " + g.getName();
+				printGuest(g);
+	/*			String out = " | " + g.getID() + ": " + g.getName();
 				System.out.println(addEastBorderTo(out, 37, "|"));
 				String out2 = " |    " + g.getAddress() + ", " + g.getCity() + ", " + g.getCountry();
 				System.out.println(addEastBorderTo(out2, 37, "|"));
-			}				
+	*/		}				
 		}
 		printDoubleLine();
 	}
@@ -93,8 +92,10 @@ public class GuestRegistrationTextInterface extends TextInterface
 							"Cancel"};	
 		
 		printHeader("FIND A GUEST BY");			
-		printOptions(options);		
-		int choice = getUserChoice(0,options.length);
+		printOptions(options, false);		
+		int choice = -1;
+		while(choice == -1)
+			choice = getUserChoice(0,options.length);
 		
 		int guestID = -1;
 		boolean cancel = false;		
@@ -104,11 +105,24 @@ public class GuestRegistrationTextInterface extends TextInterface
 			case 1: 	
 				System.out.println("> Enter name: ");
 				String nameEntered = getUserInput();
-				guestID = showFindGuestID(nameEntered);		
+				if(!nameEntered.isEmpty())
+					guestID = showFindGuestID(nameEntered, false);
+				else
+				{
+					showFindGuests();
+					cancel = true;
+				}
+				if(guestID == -99)
+					cancel = true;
 				break;
 			case 2:
 				System.out.println("> Enter guest ID: ");
 				guestID = getUserChoice(0, guestRegistration.getIDcounter());
+				if(guestID == -1)
+				{
+					showFindGuests();
+					cancel = true;
+				}
 				break;
 			default: 
 				cancel = true;
@@ -118,7 +132,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 			Guest guest = guestRegistration.getGuest(guestID);
 			
 			if(guest != null)
-				printGuestInfo(guest, true);
+				printSingleGuestInfo(guest, true);
 			else
 				System.out.println("! Guest not found.");		
 		}
@@ -127,39 +141,48 @@ public class GuestRegistrationTextInterface extends TextInterface
 	/**
 	 * Finds a guest ID based on a given name. If multiple matches, asks for guest selection.
 	 * @param nameEntered Name of guest to be found
-	 * @return Returns a guest ID as indicated by user input.
+	 * @return Returns a guest ID as indicated by user input. Returns -1 if no guest was found, -99 if multiple guests were found and displayed
 	 */
-	protected int showFindGuestID(String nameEntered)
+	protected int showFindGuestID(String nameEntered, boolean forceChoice)
 	{
 		ArrayList<Guest> guestsFound = guestRegistration.findGuestID(nameEntered);
 		int guestID = -1;
+		
 		if(guestsFound.size() == 1)
 			guestID = guestsFound.get(0).getID();
+		
 		else if(guestsFound.size() > 1)
 		{
+			printHeader("Results");
+			
 			for(int i=0; i<guestsFound.size(); i++)
 			{
-				printGuestInfo(guestsFound.get(i), true);
-				if(promptInputConfirmation(true))
-				{
-					guestID = guestsFound.get(i).getID();
-					i=guestsFound.size();
-				}
+				if(i != 0)
+					printSingleLine();
+				
+				printGuest(guestsFound.get(i));
+			}
+			printDoubleLine();
+			if(!forceChoice)
+				return -99;
+			else
+			{
+				System.out.println("> Enter Guest ID: ");
+				while(guestID==-1)
+					guestID = this.getUserChoice(0, guestRegistration.getGuestIDcounter());
 			}
 		}
 		return guestID;
 	}
 	
 	/**
-	 * Displays the Add New Guest screen of this interface. 
+	 * Displays the Add New Guest screen of this interface.
 	 * @param showHeader Indicates whether the header of this screen should be printed.
 	 */
-	private void showAddNewGuest(boolean showHeader)
+	protected void showAddNewGuest(boolean showHeader)
 	{
 		if(showHeader)
-			printHeader("REGISTER A NEW GUEST");
-		else
-			System.out.println("! Information discarded. Please re-enter information.");
+			printHeader("REGISTER A NEW GUEST");			
 		
 		System.out.println("> Please enter guest's name:");
 		String nameEntered = getUserInput();		
@@ -177,7 +200,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 		String countryEntered = getUserInput();
 		String country = capitalize(countryEntered);
 		
-		printGuestInfo(new Guest(name, address, city, country, -1), false);
+		printSingleGuestInfo(new Guest(name, address, city, country, -1), false);
 				
 		boolean correct = promptInputConfirmation(true);
 			
@@ -187,7 +210,10 @@ public class GuestRegistrationTextInterface extends TextInterface
 			System.out.println("! New guest "+ name + " succesfully added with guest ID number: "+ guestID + "."); 
 		}
 		else
+		{
+			System.out.println("! Information discarded. Please re-enter infsormation.");
 			showAddNewGuest(false);		
+		}
 	}	
 	
 	/**
@@ -204,7 +230,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 		
 		if(guest != null)
 		{
-			printGuestInfo(guest, true);
+			printSingleGuestInfo(guest, true);
 			System.out.println("> Are you sure you want to remove this guest? (Y/N): ");
 			boolean correct = promptInputConfirmation(false);
 			
@@ -218,7 +244,6 @@ public class GuestRegistrationTextInterface extends TextInterface
 		}
 		else
 			System.out.println("! Error: Guest could not be found.");
-		showFirstLevelOptionMenu();
 	}
 	
 	/**
@@ -226,15 +251,30 @@ public class GuestRegistrationTextInterface extends TextInterface
 	 * @param guest Guest to print information of.
 	 * @param printID Indicates whether the Guests's guestID should be printed.
 	 */
-	protected void printGuestInfo(Guest guest, boolean printID)
+	protected void printSingleGuestInfo(Guest guest, boolean printID)
 	{
 		System.out.println("\n	 Result:\n	******************************");
-		System.out.println(addEastBorderTo("	* Name: " + guest.getName(), 30,"*"));
-		System.out.println(addEastBorderTo("	* Address: " + guest.getAddress(), 30,"*"));
-		System.out.println(addEastBorderTo("	* City: " + guest.getCity(), 30,"*"));
-		System.out.println(addEastBorderTo("	* Country: " + guest.getCountry(), 30,"*"));
+		System.out.println(addEastBorderTo("        * Name: " + guest.getName(), "*"));
+		System.out.println(addEastBorderTo("        * Address: " + guest.getAddress(), "*"));
+		System.out.println(addEastBorderTo("        * City: " + guest.getCity(), "*"));
+		System.out.println(addEastBorderTo("        * Country: " + guest.getCountry(), "*"));
 		if(printID)
-			System.out.println(addEastBorderTo( "	* Guest ID: " + guest.getID(),30,"*"));
+			System.out.println(addEastBorderTo( "        * Guest ID: " + guest.getID(), "*"));
 		System.out.println("	******************************");
+	}
+	
+	/**
+	 * Prints Guest g's personal information to the screen.
+	 * @param g Guest
+	 */
+	private void printGuest(Guest g)
+	{
+		String out = " | " + g.getID() + ": " + g.getName();
+		System.out.println(addEastBorderTo(out,  "|"));
+		String out2 = " |    " + g.getAddress();
+		System.out.println(addEastBorderTo(out2, "|"));
+		String out3 = " |    " + g.getCity() + ", " + g.getCountry();
+		System.out.println(addEastBorderTo(out3, "|"));
+
 	}
 }
