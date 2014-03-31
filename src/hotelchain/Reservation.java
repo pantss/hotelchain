@@ -21,12 +21,13 @@ public class Reservation implements Serializable
 	private boolean cancelled;
 	
 	/**
-	 * Constructs a new Reservation with given guest ID number, hotel name, room number, start and en dates and reservation ID.
+	 * Constructs a new Reservation with given guest ID number, hotel name, room number, start and end dates and reservation ID.
 	 * @param _guestID ID number of Guest this reservation was booked by.
 	 * @param _hotelName Name of hotel booked by this reservation.  
 	 * @param _roomNumber Room number of Room booked by this reservation.
 	 * @param resStartDate Start date of this reservation.
 	 * @param resEndDate End date of this reservation.
+	 * @param _bridalSuite Indicates whether this reservation is for a bridal suite.
 	 * @param resID ID number of this reservation.
 	 */
 	public Reservation(int _guestID, String _hotelName, int _roomNumber, Calendar resStartDate, Calendar resEndDate, boolean _bridalSuite, int resID)

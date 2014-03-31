@@ -13,8 +13,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 
 	/**
 	 * Constructs an instance of a textual guest registration interface, extending the basic TextInterface.
-	 * @param _guestRegistration The Guest Registration system this class provides an interface for.
-	 * @param _init Indicates whether this interface should be displayed.
+	 * @param _guestRegistration The guest registration system this class provides an interface for.
 	 */
 	public GuestRegistrationTextInterface(GuestRegistration _guestRegistration)
 	{
@@ -73,11 +72,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 			{
 				printSingleLine();
 				printGuest(g);
-	/*			String out = " | " + g.getID() + ": " + g.getName();
-				System.out.println(addEastBorderTo(out, 37, "|"));
-				String out2 = " |    " + g.getAddress() + ", " + g.getCity() + ", " + g.getCountry();
-				System.out.println(addEastBorderTo(out2, 37, "|"));
-	*/		}				
+			}				
 		}
 		printDoubleLine();
 	}
@@ -141,7 +136,8 @@ public class GuestRegistrationTextInterface extends TextInterface
 	/**
 	 * Finds a guest ID based on a given name. If multiple matches, asks for guest selection.
 	 * @param nameEntered Name of guest to be found
-	 * @return Returns a guest ID as indicated by user input. Returns -1 if no guest was found, -99 if multiple guests were found and displayed
+	 * @param forceChoice indicates whether user is forced to make a choice if search returns multiple results.
+	 * @return Returns a guest ID as indicated by user input. Returns -1 if no guest was found, -99 if multiple guests were found and displayed but no choice was made.
 	 */
 	protected int showFindGuestID(String nameEntered, boolean forceChoice)
 	{

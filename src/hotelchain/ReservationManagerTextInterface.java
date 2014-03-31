@@ -16,10 +16,10 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	
 	/**
 	 * Constructs an instance of a textual reservation management interface, extending the GuestRegistration textual interface.
-	 * @param _reservationManager
-	 * @param _guestRegistration
+	 * @param _reservationManager Reservation manager this class provides a text-based interface for.
+	 * @param _guestRegistration Guest registration providing information to the reservation manager.
 	 */
-	public ReservationManagerTextInterface(ReservationManager _reservationManager, GuestRegistration _guestRegistration)//HotelChain _chain)
+	public ReservationManagerTextInterface(ReservationManager _reservationManager, GuestRegistration _guestRegistration)
 	{
 	   super(_guestRegistration);
 	   reservationManager = _reservationManager;
