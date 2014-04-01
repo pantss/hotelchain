@@ -32,7 +32,6 @@ public class Guest  implements Serializable
 		country = _country;
 		guestID = id;
 	}
-	
 
 	/**
 	 * @return Returns this guest's ID number.

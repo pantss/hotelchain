@@ -52,19 +52,17 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 							"Clean reservations",
 							"Go back"};
 		
-		printHeader("RESERVATION MANAGEMENT");
-		
+		printHeader("RESERVATION MANAGEMENT");		
 		printOptions(options, true);
-		int choice = getUserChoice(0, options.length);
-		
+		int choice = getUserChoice(0, options.length);		
 		switch(choice)
 		{
-		case 1: displayReservationsInformation(); break;
-		case 2: showReserveRoom(); break;
-		case 3: showFindReservation(); break;
-		case 4: showCancelReservation(); break;
-		case 5: showCleanReservations(); break;
-		default: exitRequested = true;
+			case 1: displayReservationsInformation(); break;
+			case 2: showReserveRoom(); break;
+			case 3: showFindReservation(); break;
+			case 4: showCancelReservation(); break;
+			case 5: showCleanReservations(); break;
+			default: exitRequested = true;
 		}
 	}
 	
@@ -81,21 +79,11 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		
 		for(int i=0; i<reservationManager.getReservationIDcounter(); i++)
 		{
-			Reservation r = reservationManager.getReservation(i);
-						
+			Reservation r = reservationManager.getReservation(i);						
 			if(r!=null)
 			{
 				printSingleLine();
-				print(r.getID() + ": " + guestRegistration.getGuest(r.getGuestID()).getName() + " (" + r.getGuestID() + ")", "|");
-				
-				String out2 = " at " + r.getHotelName();
-				if(r.isBridalSuite())
-					out2 = out2.concat(", the Bridal Suite");
-				else
-					out2 = out2.concat(", Room #" + r.getRoomNumber());
-				print(out2, "|");
-				print(" " + reservationManager.calendarToString(r.getStartDate()), "|");
-				print("   - " + reservationManager.calendarToString(r.getEndDate()),"|");
+				printReservation(r);
 				if(r.isCancelled())
 					print("! This reservation was CANCELLED.", "|");
 			}
@@ -132,7 +120,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			
 			if(guest != null)
 			{
-				printSingleGuestInfo(guest, true);
+				printGuestInfo(guest, true);
 				chosenHotel = showChooseHotel();
 				if(chosenHotel != null)
 				{						
@@ -142,12 +130,10 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 					
 					boolean bridalDesired = showGetBridalDesired(chosenHotel, startDate, endDate);			
 					
-					Reservation newReservation = reservationManager.reserveRoom(guest, chosenHotel, startDate, endDate, bridalDesired);
-					
+					Reservation newReservation = reservationManager.reserveRoom(guest, chosenHotel, startDate, endDate, bridalDesired);					
 					if(newReservation != null)
 					{
-						printReservation(newReservation);
-						
+						printReservationInfo(newReservation);						
 						if(promptInputConfirmation(true))
 							System.out.println("! Reservation booked succesfully!");
 						else
@@ -172,8 +158,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	{
 		if(reservationManager.getNumberOfReservations()>0)
 		{
-			//Can be substituted with showFindReservation()
-		
+			//Can be substituted with showFindReservation()		
 			displayReservationsInformation();
 			
 			System.out.println("> Please enter ID of reservation to be cancelled: ");
@@ -182,7 +167,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			
 			if(reservation!=null)
 			{
-				printReservation(reservation);
+				printReservationInfo(reservation);
 				System.out.println("> Are you sure you want to cancel this reservation? (Y/N): ");
 				boolean correct = promptInputConfirmation(false);
 				
@@ -252,10 +237,9 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			}
 			if(!cancel)
 			{
-				Reservation reservation = reservationManager.getReservation(reservationID);
-				
+				Reservation reservation = reservationManager.getReservation(reservationID);				
 				if(reservation != null)
-					printReservation(reservation);
+					printReservationInfo(reservation);
 				else
 					System.out.println("! Reservation not found.");
 			}
@@ -272,7 +256,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		ArrayList<Reservation> pastAndCancelledReservations = reservationManager.getPastAndCancelledReservations();
 		for(int i=0; i<pastAndCancelledReservations.size();i++)
 		{
-			printReservation(pastAndCancelledReservations.get(i));
+			printReservationInfo(pastAndCancelledReservations.get(i));
 			System.out.println("> Are you sure you want to move this reservation to the archive? (Y/N): ");
 			if(!promptInputConfirmation(false))
 				pastAndCancelledReservations.remove(i);		
@@ -303,7 +287,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		{
 			for(int i=0; i<resFound.size(); i++)
 			{
-				printReservation(resFound.get(i));
+				printReservationInfo(resFound.get(i));
 				if(promptInputConfirmation(true))
 				{
 					resID = resFound.get(i).getID();
@@ -335,7 +319,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		{
 			System.out.println("! Cancelled.");
 			return null;
-		}
+		}		
 		return hotels[choice-1];	
 	}
 	
@@ -368,14 +352,14 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	private boolean showGetBridalDesired(Hotel hotel, Calendar startDate, Calendar endDate)
 	{
 		System.out.println("> Would you like to book the bridal suite (if available)?");
-			 return promptInputConfirmation(false);		
+		return promptInputConfirmation(false);		
 	}
 	
 	/**
 	 * Prints information of a given Reservation to the screen.
 	 * @param res Reservation whose information is to be printed.
 	 */
-	private void printReservation(Reservation res)
+	private void printReservationInfo(Reservation res)
 	{
 		System.out.println("\n  Result:\n  ***********************************");
 		print("Reservation ID: " + res.getID(), "*");
@@ -392,6 +376,23 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			print("! CANCELLED", "*");
 		System.out.println("  ***********************************");
 	}	
+	
+	/**
+	 * Prints Reservation r to the screen as part of a table.
+	 * @param r Reservation to be printed.
+	 */
+	private void printReservation(Reservation r)
+	{
+		print(r.getID() + ": " + guestRegistration.getGuest(r.getGuestID()).getName() + " (" + r.getGuestID() + ")", "|");		
+		String out2 = " at " + r.getHotelName();
+		if(r.isBridalSuite())
+			out2 = out2.concat(", the Bridal Suite");
+		else
+			out2 = out2.concat(", Room #" + r.getRoomNumber());
+		print(out2, "|");
+		print(" " + reservationManager.calendarToString(r.getStartDate()), "|");
+		print("   - " + reservationManager.calendarToString(r.getEndDate()),"|");
+	}
 	
 	/**
 	 * Checks whether there are currently no reservations booked by guests who were removed from the system. 
@@ -421,8 +422,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	{
 		String[] split = input.split("/");
 		
-		int year = currentDate.get(Calendar.YEAR);
-		
+		int year = currentDate.get(Calendar.YEAR);		
 		if(split.length != 2) 
 		{
 			if(split.length > 3 || split.length < 2)
@@ -435,21 +435,18 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			year = Integer.parseInt(yearString);			
 		}
 				
-		String dayString = split[1];
-		
+		String dayString = split[1];		
 		if(dayString.length()>2 || dayString.length() < 1)
 			return null;
-		int day = Integer.parseInt(dayString);
+		int day = Integer.parseInt(dayString);		
 		
 		int month = -1;
-		
 		try{
 			month =  Integer.parseInt(split[0]);
 		}
 		catch (NumberFormatException e)	{
 			return null;
-		}
-		
+		}		
 		if(month > 12 || month < 1)
 			return null;
 		

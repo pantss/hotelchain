@@ -18,12 +18,11 @@ public class HotelChainTextInterface extends TextInterface
 	public HotelChainTextInterface(HotelChain _chain)
 	{
 		super();
-		chain = _chain;
-		
+		chain = _chain;		
 		guestRegistrationTextInterface = new GuestRegistrationTextInterface(chain.getGuestRegistration());
 		reservationManagerTextInterface = new ReservationManagerTextInterface(chain.getReservationManager(), chain.getGuestRegistration());
-		printHeader("Welcome to " + chain.getName() + ". ");
 		
+		printHeader("Welcome to " + chain.getName() + ". ");		
 		while(!exitRequested)
 			showFirstLevelOptionMenu();
 	}	
@@ -37,11 +36,10 @@ public class HotelChainTextInterface extends TextInterface
 		String[] options = { "About " + chain.getName() + ".", 	
 							"Guest Registration.",	
 							"Reservation Manager.",
-							"Exit Menu"};						 
-		printOptions(options, true);
-			
-		int choice = getUserChoice(0,options.length);
+							"Exit Menu"};	
 		
+		printOptions(options, true);			
+		int choice = getUserChoice(0,options.length);		
 		switch(choice)
 		{
 			case 1: 
@@ -51,7 +49,8 @@ public class HotelChainTextInterface extends TextInterface
 			case 3: 
 				reservationManagerTextInterface.init(); break;
 			default: 
-				exitRequested = true; System.out.println("! Exiting interface."); 
+				exitRequested = true; 
+				System.out.println("! Exiting interface."); 
 		}	
 	}
 	
@@ -68,11 +67,9 @@ public class HotelChainTextInterface extends TextInterface
 		
 		for(int i=0; i<hotels.length;i++)
 		{
-			String out2 = hotels[i].getName();
-			
+			String out2 = hotels[i].getName();			
 			for(int j = out2.length(); j<27; j++)
-				out2 = out2.concat(" ");			
-			
+				out2 = out2.concat(" ");						
 			out2 = out2.concat(" " + hotels[i].getNumberOfRooms());	
 			print(out2, "|");
 		}

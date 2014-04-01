@@ -66,9 +66,8 @@ public class TextInterface
 		printDoubleLine();
 		
 		for(int i=1; i<options.length; i++)
-		{
 			System.out.println(" " + i + ": " + options[i-1]);
-		}
+		
 		System.out.println(" ------------");
 		if(options.length<10)
 			System.out.println(" " + 9 +": " + options[options.length-1]);
@@ -99,12 +98,12 @@ public class TextInterface
 				e.printStackTrace(System.out);
 			}
 			if(!response.isEmpty())
-			try{
-				 choice = Integer.parseInt(response);
-			}
-			catch(NumberFormatException e)	{
-				
-			}
+				try{
+					 choice = Integer.parseInt(response);
+				}
+				catch(NumberFormatException e)	{
+					
+				}
 	
 			if(choice == 9 || (choice >= firstOption && choice < lastOption))
 				validResponse = true;
@@ -121,17 +120,14 @@ public class TextInterface
 	 */
 	protected String getUserInput()
 	{
-		String input = null;
-		
+		String input = null;		
 		while(input == null)
-		{
 			try {
 				input = inputReader.readLine();
 			} catch (IOException e) {
 				input = null;
 				e.printStackTrace();
 			}
-		}		
 		return input;
 	}	
 	
@@ -156,20 +152,17 @@ public class TextInterface
 	{
 		if(!string.startsWith(" " + border))
 			string = " ".concat(border + " " + string);
-	//	string = string.concat(string);
 		int borderLimit = 37;
 		for(int i= string.length(); i<borderLimit; i++)
 			string = string.concat(" ");
 		if(string.length()>borderLimit)
 		{
-			int charCtr = 0;
-			
+			int charCtr = 0;			
 			int i;
 			for(i=0; charCtr < 2; i++)
-			{
 				if(string.charAt(i) != ' ')
 					charCtr++;
-			}
+			
 			int splitIndex = 0;
 			for(int j= borderLimit-2; j>=0; j--)
 				if(string.startsWith(" ", j))
@@ -209,7 +202,8 @@ public class TextInterface
 	 * @return Returns a new String with each word's first letter Capitalized.
 	 */
 	protected String capitalize(String string)
-	{	if(!string.isEmpty())
+	{	
+		if(!string.isEmpty())
 		{
 			char[] chars = string.toCharArray();
 			chars[0] = Character.toUpperCase(chars[0]);

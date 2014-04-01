@@ -12,8 +12,8 @@ public class Main {
 	public static void main(String[] args)
 	{		
 		HotelChain chain = new HotelChain("Hotel's Hotels");
-		new HotelChainTextInterface(chain);
 		
+		new HotelChainTextInterface(chain);		
 	//	new HotelChainGUI(chain);		
 	}
 }

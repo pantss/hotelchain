@@ -46,8 +46,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 		printHeader("GUEST REGISTRATION MANAGEMENT");
 		
 		printOptions(options, true);				
-		int choice = getUserChoice(0,options.length);
-		
+		int choice = getUserChoice(0,options.length);		
 		switch(choice)
 		{
 			case 1: displayGuestsInformation();  break;
@@ -133,14 +132,13 @@ public class GuestRegistrationTextInterface extends TextInterface
 				Guest guest = guestRegistration.getGuest(guestID);
 				
 				if(guest != null)
-					printSingleGuestInfo(guest, true);
+					printGuestInfo(guest, true);
 				else
 					System.out.println("! Guest not found.");		
 			}
 		}
 		else
 			System.out.println("! There are currently no guests registered.");
-
 	}
 	
 	/**
@@ -152,20 +150,17 @@ public class GuestRegistrationTextInterface extends TextInterface
 	protected int showFindGuestID(String nameEntered, boolean forceChoice)
 	{
 		ArrayList<Guest> guestsFound = guestRegistration.findGuestID(nameEntered);
-		int guestID = -1;
 		
+		int guestID = -1;		
 		if(guestsFound.size() == 1)
-			guestID = guestsFound.get(0).getID();
-		
+			guestID = guestsFound.get(0).getID();		
 		else if(guestsFound.size() > 1)
 		{
-			printHeader("Results");
-			
+			printHeader("Results");			
 			for(int i=0; i<guestsFound.size(); i++)
 			{
 				if(i != 0)
-					printSingleLine();
-				
+					printSingleLine();				
 				printGuest(guestsFound.get(i));
 			}
 			printDoubleLine();
@@ -175,7 +170,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 			{
 				System.out.println("> Enter Guest ID: ");
 				while(guestID==-1)
-					guestID = this.getUserChoice(0, guestRegistration.getGuestIDcounter());
+					guestID = getUserChoice(0, guestRegistration.getGuestIDcounter());
 			}
 		}
 		return guestID;
@@ -206,10 +201,9 @@ public class GuestRegistrationTextInterface extends TextInterface
 		String countryEntered = getUserInput();
 		String country = capitalize(countryEntered);
 		
-		printSingleGuestInfo(new Guest(name, address, city, country, -1), false);
+		printGuestInfo(new Guest(name, address, city, country, -1), false);
 				
-		boolean correct = promptInputConfirmation(true);
-			
+		boolean correct = promptInputConfirmation(true);			
 		if(correct)
 		{
 			int guestID = guestRegistration.registerNewGuest(name, address, city, country);
@@ -235,10 +229,9 @@ public class GuestRegistrationTextInterface extends TextInterface
 			
 			if(guest != null)
 			{
-				printSingleGuestInfo(guest, true);
+				printGuestInfo(guest, true);
 				System.out.println("> Are you sure you want to remove this guest and any of their reservations? (Y/N): ");
-				boolean correct = promptInputConfirmation(false);
-				
+				boolean correct = promptInputConfirmation(false);				
 				if(correct)
 				{
 					if(guestRegistration.removeGuest(guest))
@@ -259,7 +252,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 	 * @param guest Guest to print information of.
 	 * @param printID Indicates whether the Guests's guestID should be printed.
 	 */
-	protected void printSingleGuestInfo(Guest guest, boolean printID)
+	protected void printGuestInfo(Guest guest, boolean printID)
 	{
 		System.out.println("\n  Result:\n  ***********************************");
 		print("Name: " + guest.getName(), "*");
@@ -272,14 +265,13 @@ public class GuestRegistrationTextInterface extends TextInterface
 	}
 	
 	/**
-	 * Prints Guest g's personal information to the screen.
-	 * @param g Guest
+	 * Prints Guest g to the screen as part of a table.
+	 * @param g Guest Guest to be printed
 	 */
 	private void printGuest(Guest g)
 	{
 		print(g.getID() + ": " + g.getName(),  "|");
 		print("   " + g.getAddress(), "|");
 		print("   " + g.getCity() + ", " + g.getCountry(), "|");
-
 	}
 }

@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
  * The variable filename may be adapted to reflect a desired file name.
  * @author Joost Janssen
  * TODO Future features: reserve for multiple people, # of beds in a room, pricing, check in/out, read archive if desired.
- * TODO compare guest- and reservation interfaces for duplication.
  */
 public class ReservationManager extends FileHandler
 {
@@ -207,6 +206,7 @@ public class ReservationManager extends FileHandler
 	{
 		return currentDate;
 	}
+	
 	/**
 	 * Converts a given date in Calendar format to a String.
 	 * @param date Date in Calendar format to be converted.

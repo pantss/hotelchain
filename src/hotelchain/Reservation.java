@@ -38,8 +38,7 @@ public class Reservation implements Serializable
 		startDate = resStartDate;
 		endDate = resEndDate;
 		bridalSuite = _bridalSuite;
-		reservationID = resID;
-		
+		reservationID = resID;		
 		cancelled = false;
 	}
 
@@ -82,6 +81,7 @@ public class Reservation implements Serializable
 	{
 		return startDate;
 	}
+	
 	/**
 	 * @return Returns the end date of this reservation.
 	 */

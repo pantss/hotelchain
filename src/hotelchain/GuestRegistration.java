@@ -100,7 +100,6 @@ public class GuestRegistration extends FileHandler
 			
 		return null;
 	}	
-
 		
 	/**
 	 * @return Returns the number of guests currently registered with this hotel chain.

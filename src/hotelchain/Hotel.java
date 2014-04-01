@@ -16,7 +16,6 @@ public class Hotel implements Serializable
 	private final Room[] hotelRooms;
 	private final int bridalSuiteNumber;
 	private ArrayList<Reservation> upcomingReservations;
-	
 
 	/**
 	 * Constructs an instance of a Hotel. 
@@ -27,14 +26,13 @@ public class Hotel implements Serializable
 	{
 		name = _name;
 		numberOfRooms = rooms;
-		hotelRooms = new Room[rooms];
+		upcomingReservations = new ArrayList<Reservation>();
 		
+		hotelRooms = new Room[rooms];		
 		for(int i=0; i<hotelRooms.length-1; i++)
-			hotelRooms[i] = new Room(i+1);
-		
+			hotelRooms[i] = new Room(i+1);		
 		hotelRooms[hotelRooms.length-1] = new BridalSuite(hotelRooms.length);
 		bridalSuiteNumber = hotelRooms.length;		
-		upcomingReservations = new ArrayList<Reservation>();
 	}
 	
 	/**
@@ -52,6 +50,7 @@ public class Hotel implements Serializable
 		{
 			Reservation reservation = new Reservation(guest.getID(), this.getName(), freeRoom.getRoomNumber(), startDate, endDate, false, reservationID);
 			addReservation(reservation);
+			
 			return reservation;
 		}
 		return null;
@@ -85,6 +84,7 @@ public class Hotel implements Serializable
 			 reservation =  reserveRoom(guest, startDate, endDate, reservationID);	
 		
 		addReservation(reservation);
+		
 		return reservation;		
 	}
 	
@@ -124,8 +124,6 @@ public class Hotel implements Serializable
 		boolean available = true;
 		
 		for(int i=0;i<upcomingReservations.size();i++)
-		{	
-			
 			if(upcomingReservations.get(i).getRoomNumber() == roomNr)
 			{
 				if(upcomingReservations.get(i).getStartDate().before(endDate))
@@ -138,7 +136,6 @@ public class Hotel implements Serializable
 					if(!upcomingReservations.get(i).isCancelled())
 						available = false;
 			}				
-		}
 		return available;
 	}	
 	
