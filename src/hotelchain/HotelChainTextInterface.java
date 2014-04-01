@@ -35,7 +35,7 @@ public class HotelChainTextInterface extends TextInterface
 	{	
 		//last option must be exit option
 		String[] options = { "About " + chain.getName() + ".", 	
-							"Guest Registration Management.",	
+							"Guest Registration.",	
 							"Reservation Manager.",
 							"Exit Menu"};						 
 		printOptions(options, true);
@@ -63,20 +63,21 @@ public class HotelChainTextInterface extends TextInterface
 		Hotel[] hotels = chain.getHotels();
 		
 		printHeader("About " + chain.getName());
-		String out = " | Hotel" + "                " + "No. of Rooms";
-		System.out.println(addEastBorderTo(out, "|"));
+		print("Hotel" + "                " + "No. of Rooms", "|");
 		printSingleLine();
 		
 		for(int i=0; i<hotels.length;i++)
 		{
-			String out2 = " | " + hotels[i].getName();
+			String out2 = hotels[i].getName();
 			
 			for(int j = out2.length(); j<27; j++)
 				out2 = out2.concat(" ");			
 			
 			out2 = out2.concat(" " + hotels[i].getNumberOfRooms());	
-			System.out.println(addEastBorderTo(out2, "|"));
+			print(out2, "|");
 		}
+		printSingleLine();
+		print("Total number of reservations: " + chain.getReservationManager().getNumberOfReservations(), "|");
 		printDoubleLine();
 	}	
 }

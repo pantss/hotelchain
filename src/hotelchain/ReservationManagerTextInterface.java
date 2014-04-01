@@ -45,12 +45,12 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	private void showReservationManager()
 	{
 		//Last option in array must be exit option
-		String[] options = {"General information about \n	reservations.",
-							"Reserve a Room",
-							"Find a Reservation",											
-							"Cancel a Reservation",
-							"Clean Reservations",
-							"Go Back"};
+		String[] options = {"Show all reservations.",
+							"Reserve a room",
+							"Find a reservation",											
+							"Cancel a reservation",
+							"Clean reservations",
+							"Go back"};
 		
 		printHeader("RESERVATION MANAGEMENT");
 		
@@ -75,9 +75,9 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	{
 		printHeader("All Reservations");
 		if(reservationManager.getNumberOfReservations() > 0)
-			System.out.println(addEastBorderTo(" | ID | # of reservations: " + reservationManager.getNumberOfReservations(), "|"));
+			print(" ID | # of reservations: " + reservationManager.getNumberOfReservations(), "|");
 		else
-			System.out.println(addEastBorderTo(" |    | # of reservations: " + reservationManager.getNumberOfReservations(), "|"));
+			print("    | # of reservations: " + reservationManager.getNumberOfReservations(), "|");
 		
 		for(int i=0; i<reservationManager.getReservationIDcounter(); i++)
 		{
@@ -86,20 +86,18 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			if(r!=null)
 			{
 				printSingleLine();
-				String out = " | " + r.getID() + ": " + guestRegistration.getGuest(r.getGuestID()).getName() + " (" + r.getGuestID() + ")";
-				System.out.println(out = addEastBorderTo(out, "|"));
-				String out2 = " |  at " + r.getHotelName();
+				print(r.getID() + ": " + guestRegistration.getGuest(r.getGuestID()).getName() + " (" + r.getGuestID() + ")", "|");
+				
+				String out2 = " at " + r.getHotelName();
 				if(r.isBridalSuite())
 					out2 = out2.concat(", the Bridal Suite");
 				else
 					out2 = out2.concat(", Room #" + r.getRoomNumber());
-				System.out.println(addEastBorderTo(out2, "|"));
-				String out3 = " |  " + reservationManager.calendarToString(r.getStartDate());
-				System.out.println(addEastBorderTo(out3, "|"));
-				String out4 = " |    - " + reservationManager.calendarToString(r.getEndDate());
-				System.out.println(addEastBorderTo(out4, "|"));
+				print(out2, "|");
+				print(" " + reservationManager.calendarToString(r.getStartDate()), "|");
+				print("   - " + reservationManager.calendarToString(r.getEndDate()),"|");
 				if(r.isCancelled())
-					System.out.println(addEastBorderTo(" | ! This reservation was CANCELLED.", "|"));
+					print("! This reservation was CANCELLED.", "|");
 			}
 		}		
 		printDoubleLine();
@@ -379,20 +377,20 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	 */
 	private void printReservation(Reservation res)
 	{
-		System.out.println("\n	 Result:\n	******************************");
-		System.out.println(addEastBorderTo("        * Reservation ID: " + res.getID(), "*"));
-		System.out.println(addEastBorderTo("        * -------------------------- ", "*"));
-		System.out.println(addEastBorderTo("        *  " + guestRegistration.getGuest(res.getGuestID()).getName(), "*"));
-		System.out.println(addEastBorderTo("        * "+ res.getHotelName(), "*"));
+		System.out.println("\n  Result:\n  ***********************************");
+		print("Reservation ID: " + res.getID(), "*");
+		print("-------------------------- ", "*");
+		print(guestRegistration.getGuest(res.getGuestID()).getName(), "*");
+		print(res.getHotelName(), "*");
 		if(res.isBridalSuite())
-			System.out.println(addEastBorderTo("        * Room: Bridal Suite", "*"));
+			print("Room: Bridal Suite", "*");
 		else
-			System.out.println(addEastBorderTo( "        * Room #" + res.getRoomNumber(), "*"));
-		System.out.println(addEastBorderTo( "        *  " + reservationManager.calendarToString(res.getStartDate()), "*"));
-		System.out.println(addEastBorderTo( "        *   - " + reservationManager.calendarToString(res.getEndDate()), "*"));
+			print("Room #" + res.getRoomNumber(), "*");
+		print(reservationManager.calendarToString(res.getStartDate()), "*");
+		print("  - " + reservationManager.calendarToString(res.getEndDate()), "*");
 		if(res.isCancelled())
-			System.out.println(addEastBorderTo("        * ! CANCELLED", "*"));
-		System.out.println("	******************************");
+			print("! CANCELLED", "*");
+		System.out.println("  ***********************************");
 	}	
 	
 	/**

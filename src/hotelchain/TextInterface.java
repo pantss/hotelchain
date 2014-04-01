@@ -143,46 +143,48 @@ public class TextInterface
 	{
 		System.out.println();
 		printDoubleLine();
-		System.out.println(addEastBorderTo(" | " + header, "|"));
+		print(header, "|");
 		printDoubleLine();
 	}
 	
 	/**
-	 * Returns a given string, fills it out to a limit "eastBorderIndex," followed by String add.
-	 * @param out String to add east border symbol to.
-	 * @return Returns the given String filled with whitespace followed by border "add".
+	 * Prints a given string surrounded by Strings "border". Extends to next line (within borders) if necessary.
+	 * @param string String to print between borders.
+	 * @param border Border String.
 	 */
-	protected String addEastBorderTo(String out, String add)
+	protected void print(String string, String border)
 	{
-		final int eastBorderIndex = 37;
-		for(int i=out.length(); i < eastBorderIndex; i++)
-			out = out.concat(" ");
-		
-		if(out.length()>eastBorderIndex)
+		if(!string.startsWith(" " + border))
+			string = " ".concat(border + " " + string);
+	//	string = string.concat(string);
+		int borderLimit = 37;
+		for(int i= string.length(); i<borderLimit; i++)
+			string = string.concat(" ");
+		if(string.length()>borderLimit)
 		{
 			int charCtr = 0;
 			
 			int i;
 			for(i=0; charCtr < 2; i++)
 			{
-				if(out.charAt(i) != ' ')
+				if(string.charAt(i) != ' ')
 					charCtr++;
 			}
-			String prefix = out.substring(0, i-1);
 			int splitIndex = 0;
-			for(int j= eastBorderIndex-2; j>=0; j--)
-				if(out.startsWith(" ", j))
+			for(int j= borderLimit-2; j>=0; j--)
+				if(string.startsWith(" ", j))
 				{
 					splitIndex = j;
 					j=-1;
 				}
-			String firstLine = addEastBorderTo(out.substring(0, splitIndex), add);
-			String secondLine = addEastBorderTo(prefix.concat(out.substring(splitIndex, out.length())), add);
-			out = firstLine.concat("\n" + secondLine);
-			}
+			print(string.substring(0, splitIndex), border);
+			print(string.substring(0, i-1).concat(string.substring(splitIndex, string.length())), border);		
+		}
 		else
-			out = out.concat(add);
-		return out;
+		{	
+			string = string.concat(border);
+			System.out.println(string);
+		}
 	}
 		
 	/**
