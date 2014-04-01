@@ -26,6 +26,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 	 */
 	public void init()
 	{
+		exitRequested = false;
 		while(!exitRequested)
 			showGuestRegistration();		
 	}
@@ -37,10 +38,10 @@ public class GuestRegistrationTextInterface extends TextInterface
 	{
 		//Last option in array must be exit option
 		String[] options = {"General information about guests." ,	
-											"Find a Guest.",					
-											"Register a New Guest.",									
-											"Remove a Guest's registration.",				
-											"Go Back"};							
+							"Find a Guest.",					
+							"Register a New Guest.",									
+							"Remove a Guest's registration.",				
+							"Go Back"};							
 		
 		printHeader("GUEST REGISTRATION MANAGEMENT");
 		
@@ -51,7 +52,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 		{
 			case 1: displayGuestsInformation();  break;
 			case 2: showFindGuests(); break;
-			case 3:  showAddNewGuest(true); break;
+			case 3: showAddNewGuest(true); break;
 			case 4: showRemoveGuest(); break;
 			default: exitRequested = true;
 		}		
@@ -63,7 +64,10 @@ public class GuestRegistrationTextInterface extends TextInterface
 	protected void displayGuestsInformation()
 	{
 		printHeader("Currently Registered Guests");
-		System.out.println(addEastBorderTo(" | ID |	# of guests: " +  guestRegistration.getNumberOfRegisteredGuests(), "|"));
+		if(guestRegistration.getNumberOfRegisteredGuests() > 0)
+			System.out.println(addEastBorderTo(" | ID |	# of guests: " +  guestRegistration.getNumberOfRegisteredGuests(), "|"));
+		else
+			System.out.println(addEastBorderTo(" |    |	# of guests: " +  guestRegistration.getNumberOfRegisteredGuests(), "|"));
 	
 		for(int i=0; i<guestRegistration.getGuestIDcounter(); i++)
 		{
@@ -82,55 +86,61 @@ public class GuestRegistrationTextInterface extends TextInterface
 	 */
 	private void showFindGuests()
 	{
-		String[] options = { "Name", 			
-						  	"Guest ID",
-							"Cancel"};	
-		
-		printHeader("FIND A GUEST BY");			
-		printOptions(options, false);		
-		int choice = -1;
-		while(choice == -1)
-			choice = getUserChoice(0,options.length);
-		
-		int guestID = -1;
-		boolean cancel = false;		
-	
-		switch(choice)
-		{
-			case 1: 	
-				System.out.println("> Enter name: ");
-				String nameEntered = getUserInput();
-				if(!nameEntered.isEmpty())
-					guestID = showFindGuestID(nameEntered, false);
-				else
-				{
-					showFindGuests();
-					cancel = true;
-				}
-				if(guestID == -99)
-					cancel = true;
-				break;
-			case 2:
-				System.out.println("> Enter guest ID: ");
-				guestID = getUserChoice(0, guestRegistration.getIDcounter());
-				if(guestID == -1)
-				{
-					showFindGuests();
-					cancel = true;
-				}
-				break;
-			default: 
-				cancel = true;
-		}
-		if(!cancel)
+		if(guestRegistration.getNumberOfRegisteredGuests() > 0)
 		{	
-			Guest guest = guestRegistration.getGuest(guestID);
+			String[] options = { "Name", 			
+							  	"Guest ID",
+								"Cancel"};	
 			
-			if(guest != null)
-				printSingleGuestInfo(guest, true);
-			else
-				System.out.println("! Guest not found.");		
+			printHeader("FIND A GUEST BY");			
+			printOptions(options, false);		
+			int choice = -1;
+			while(choice == -1)
+				choice = getUserChoice(0,options.length);
+			
+			int guestID = -1;
+			boolean cancel = false;		
+		
+			switch(choice)
+			{
+				case 1: 	
+					System.out.println("> Enter name: ");
+					String nameEntered = getUserInput();
+					if(!nameEntered.isEmpty())
+						guestID = showFindGuestID(nameEntered, false);
+					else
+					{
+						showFindGuests();
+						cancel = true;
+					}
+					if(guestID == -99)
+						cancel = true;
+					break;
+				case 2:
+					System.out.println("> Enter guest ID: ");
+					guestID = getUserChoice(0, guestRegistration.getIDcounter());
+					if(guestID == -1)
+					{
+						showFindGuests();
+						cancel = true;
+					}
+					break;
+				default: 
+					cancel = true;
+			}
+			if(!cancel)
+			{	
+				Guest guest = guestRegistration.getGuest(guestID);
+				
+				if(guest != null)
+					printSingleGuestInfo(guest, true);
+				else
+					System.out.println("! Guest not found.");		
+			}
 		}
+		else
+			System.out.println("! There are currently no guests registered.");
+
 	}
 	
 	/**
@@ -181,7 +191,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 			printHeader("REGISTER A NEW GUEST");			
 		
 		System.out.println("> Please enter guest's name:");
-		String nameEntered = getUserInput();		
+		String nameEntered = getUserInput();	
 		String name = capitalize(nameEntered);		
 	
 		System.out.println("> Please enter guest's street address:");
@@ -206,10 +216,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 			System.out.println("! New guest "+ name + " succesfully added with guest ID number: "+ guestID + "."); 
 		}
 		else
-		{
-			System.out.println("! Information discarded. Please re-enter infsormation.");
-			showAddNewGuest(false);		
-		}
+			System.out.println("! No changes made.");
 	}	
 	
 	/**
@@ -217,29 +224,34 @@ public class GuestRegistrationTextInterface extends TextInterface
 	 */
 	private void showRemoveGuest()
 	{
-		//Can be substituted with showFindGuests() 
-		displayGuestsInformation();
-		
-		System.out.println("> Please enter ID of guest to be removed: ");
-		int guestID = getUserChoice(0, guestRegistration.getIDcounter());
-		Guest guest = guestRegistration.getGuest(guestID);
-		
-		if(guest != null)
-		{
-			printSingleGuestInfo(guest, true);
-			System.out.println("> Are you sure you want to remove this guest? (Y/N): ");
-			boolean correct = promptInputConfirmation(false);
+		if(guestRegistration.getNumberOfRegisteredGuests() > 0)
+		{	
+			//Can be substituted with showFindGuests() 
+			displayGuestsInformation();
 			
-			if(correct)
+			System.out.println("> Please enter ID of guest to be removed: ");
+			int guestID = getUserChoice(0, guestRegistration.getIDcounter());
+			Guest guest = guestRegistration.getGuest(guestID);
+			
+			if(guest != null)
 			{
-				if(guestRegistration.removeGuest(guest))
-					System.out.println("! Guest succesfully removed.");
+				printSingleGuestInfo(guest, true);
+				System.out.println("> Are you sure you want to remove this guest and any of their reservations? (Y/N): ");
+				boolean correct = promptInputConfirmation(false);
+				
+				if(correct)
+				{
+					if(guestRegistration.removeGuest(guest))
+						System.out.println("! Guest succesfully removed.");
+				}
+				else		
+					System.out.println("! No changes made.");						
 			}
-			else		
-				System.out.println("! No changes made.");						
+			else
+				System.out.println("! Error: Guest could not be found.");
 		}
 		else
-			System.out.println("! Error: Guest could not be found.");
+			System.out.println("! There are currently no guests registered.");
 	}
 	
 	/**

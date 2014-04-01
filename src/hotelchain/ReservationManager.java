@@ -9,7 +9,8 @@ import java.text.SimpleDateFormat;
  * Extends the FileHandler class in order to be able to store guest registration information to a file. 
  * The variable filename may be adapted to reflect a desired file name.
  * @author Joost Janssen
- * TODO Future features: pricing, check in/out, read archive if desired.
+ * TODO Future features: reserve for multiple people, # of beds in a room, pricing, check in/out, read archive if desired.
+ * TODO compare guest- and reservation interfaces for duplication.
  */
 public class ReservationManager extends FileHandler
 {
@@ -47,16 +48,6 @@ public class ReservationManager extends FileHandler
 	}
 	
 	/**
-	 * Converts a given date in Calendar format to a String.
-	 * @param date Date in Calendar format to be converted.
-	 * @return Returns a String representation of the given date.
-	 */
-	public String calendarToString(Calendar date)
-	{
-		return dateFormat.format(date.getTime());
-	}
-	
-	/**
 	 * Passes information of already existing, upcoming reservations to the respective Hotels.
 	 */
 	private void passUpcomingReservationsToHotels()
@@ -67,7 +58,7 @@ public class ReservationManager extends FileHandler
 					if(hotels[j].getName().equals(reservations.get(i).getHotelName()))
 						hotels[j].addReservation(reservations.get(i));					
 	}
-	
+
 	/**
 	 * Reserve a room for a guest at a hotel at a certain time. Returns the resulting Reservation.
 	 * @param resGuest Guest reserving a room.
@@ -96,6 +87,55 @@ public class ReservationManager extends FileHandler
 		}
 		return null;
 	}	
+	
+	/**
+	 * Cancels a given Reservation.
+	 * @param reservation Reservation to be cancelled.
+	 */
+	public void cancelReservation(Reservation reservation)
+	{
+		for(int i=0;i<reservations.size();i++)
+			if(reservation.getID() == reservations.get(i).getID())
+			{
+				reservations.get(i).cancel();
+				for(int j=0; j<hotels.length; j++)
+					if(hotels[j].getName().equals(reservations.get(i).getHotelName()))
+						hotels[j].cancelReservation(reservations.get(i));
+				
+				if(!writeFile(reservations, reservationIDcounter))
+					System.out.println("ERROR: could not remove reservation from file");
+			}
+	}
+		
+	/**
+	 * Returns the Reservation with the given reservation ID.
+	 * @param resID Reservation ID.
+	 * @return Returns the Reservation with given reservation ID. Returns null if no reservation was found.
+	 */
+	public Reservation getReservation(int resID)
+	{
+		for(int i=0; i<reservations.size();i++)
+			if(reservations.get(i).getID() == resID)
+				return reservations.get(i);
+		
+		return null;
+	}
+	
+	/**
+	 * Finds the ID number of the reservation made by the Guest with the given guest ID.
+	 * @param guestID Guest ID number.
+	 * @return Returns the ID number of the reservation made by the Guest with given guestID. Returns -1 if no reservation was found.
+	 */
+	public ArrayList<Reservation> findReservationID(int guestID)
+	{
+		ArrayList<Reservation> hits = new ArrayList<Reservation>();
+		if(guestID>-1)
+			for(int i=0; i<reservations.size(); i++)
+				if(reservations.get(i).getGuestID() == guestID)
+					hits.add(reservations.get(i));
+		
+		return hits;
+	}
 
 	/**
 	 * @return Returns an ArrayList of Reservations that where either cancelled or whose end date is before the current date.
@@ -134,63 +174,7 @@ public class ReservationManager extends FileHandler
 		
 		return false;		
 	}
-	/**
-	 * Cancels a given Reservation.
-	 * @param reservation Reservation to be cancelled.
-	 */
-	public void cancelReservation(Reservation reservation)
-	{
-		for(int i=0;i<reservations.size();i++)
-			if(reservation.getID() == reservations.get(i).getID())
-			{
-				reservations.get(i).cancel();
-				for(int j=0; j<hotels.length; j++)
-					if(hotels[j].getName().equals(reservations.get(i).getHotelName()))
-						hotels[j].cancelReservation(reservations.get(i));
-				
-				if(!writeFile(reservations, reservationIDcounter))
-					System.out.println("ERROR: could not remove reservation from file");
-			}
-	}
 	
-	/**
-	 * Returns the Reservation with the given reservation ID.
-	 * @param resID Reservation ID.
-	 * @return Returns the Reservation with given reservation ID. Returns null if no reservation was found.
-	 */
-	public Reservation getReservation(int resID)
-	{
-		for(int i=0; i<reservations.size();i++)
-			if(reservations.get(i).getID() == resID)
-				return reservations.get(i);
-		
-		return null;
-	}
-	
-	/**
-	 * Finds the ID number of the reservation made by the Guest with the given guest ID.
-	 * @param guestID Guest ID number.
-	 * @return Returns the ID number of the reservation made by the Guest with given guestID. Returns -1 if no reservation was found.
-	 */
-	public ArrayList<Reservation> findReservationID(int guestID)
-	{
-		ArrayList<Reservation> hits = new ArrayList<Reservation>();
-		if(guestID>-1)
-			for(int i=0; i<reservations.size(); i++)
-				if(reservations.get(i).getGuestID() == guestID)
-					hits.add(reservations.get(i));
-		
-		return hits;
-	}
-
-	
-	/**
-	 * @return Returns the current date.
-	 */
-	public Calendar getCurrentDate()
-	{
-		return currentDate;
-	}
 	
 	/**
 	 * @return Returns the current state of the reservation ID counter.
@@ -214,5 +198,22 @@ public class ReservationManager extends FileHandler
 	public Hotel[] getHotels()
 	{
 		return hotels;
+	}
+
+	/**
+	 * @return Returns the current date.
+	 */
+	public Calendar getCurrentDate()
+	{
+		return currentDate;
+	}
+	/**
+	 * Converts a given date in Calendar format to a String.
+	 * @param date Date in Calendar format to be converted.
+	 * @return Returns a String representation of the given date.
+	 */
+	public String calendarToString(Calendar date)
+	{
+		return dateFormat.format(date.getTime());
 	}
 }

@@ -51,37 +51,6 @@ public class GuestRegistration extends FileHandler
 		return -1;
 	}
 	
-	/**
-	 * Finds a guest's ID number based on (part of) their name.
-	 * @param name Name given to match guest ID number to
-	 * @return Returns guest ID belong to the given name or null of no match was found.
-	 */
-	public ArrayList<Guest> findGuestID(String name)
-	{
-		ArrayList<Guest> hits = new ArrayList<Guest>();
-		if(name!=null)
-			for(int i=0;i<guests.size();i++)
-				if(guests.get(i).getName().toLowerCase().contains(name.toLowerCase()))
-					hits.add(guests.get(i));
-				
-		return hits;		
-	}	
-	
-	/**
-	 * Finds a guest based on their guest ID number.
-	 * Note: assumes there can be no duplicate IDs
-	 * @param guestID Guest ID number 
-	 * @return Returns the guest whose ID number was given or null of no match was found. 	
-	 */
-	public Guest getGuest(int guestID)
-	{
-		if(guestID>=0)
-			for(int i=0; i<guests.size();i++)
-				if(guests.get(i).getID() == guestID)
-					return guests.get(i);
-			
-		return null;
-	}	
 
 	/**
 	 * Removes a given guest's information from the hotel chain's systems.
@@ -99,6 +68,39 @@ public class GuestRegistration extends FileHandler
 		}				
 		return false;		
 	}
+	
+	/**
+	 * Finds a guest's ID number based on (part of) their name.
+	 * @param name Name given to match guest ID number to
+	 * @return Returns guest ID belong to the given name or null if no match was found.
+	 */
+	public ArrayList<Guest> findGuestID(String name)
+	{
+		ArrayList<Guest> hits = new ArrayList<Guest>();
+		if(name!=null)
+			for(int i=0;i<guests.size();i++)
+				if(guests.get(i).getName().toLowerCase().contains(name.toLowerCase()))
+					hits.add(guests.get(i));
+				
+		return hits;		
+	}	
+	
+	/**
+	 * Finds a guest based on their guest ID number.
+	 * Note: assumes there can be no duplicate IDs
+	 * @param guestID Guest ID number 
+	 * @return Returns the guest whose ID number was given or null if no match was found. 	
+	 */
+	public Guest getGuest(int guestID)
+	{
+		if(guestID>=0)
+			for(int i=0; i<guests.size();i++)
+				if(guests.get(i).getID() == guestID)
+					return guests.get(i);
+			
+		return null;
+	}	
+
 		
 	/**
 	 * @return Returns the number of guests currently registered with this hotel chain.

@@ -95,25 +95,23 @@ public class TextInterface
 			try	{
 				response = inputReader.readLine();
 			} 
-			catch (IOException e)	{				
-		//		e.printStackTrace();
+			catch (IOException e)	{
+				e.printStackTrace(System.out);
 			}
-			
+			if(!response.isEmpty())
 			try{
 				 choice = Integer.parseInt(response);
 			}
 			catch(NumberFormatException e)	{
-				choice = -1;
-				break;
+				
 			}
 	
-			if(choice == 9 || (choice >= firstOption && choice <= lastOption))
+			if(choice == 9 || (choice >= firstOption && choice < lastOption))
 				validResponse = true;
 			else
 				System.out.println("! Please enter a valid choice."	
 						+ "\n> Your choice: ");
-		}	
-		
+		}			
 		return choice;
 	}
 
@@ -209,16 +207,18 @@ public class TextInterface
 	 * @return Returns a new String with each word's first letter Capitalized.
 	 */
 	protected String capitalize(String string)
-	{
-		char[] chars = string.toCharArray();
-		chars[0] = Character.toUpperCase(chars[0]);
+	{	if(!string.isEmpty())
+		{
+			char[] chars = string.toCharArray();
+			chars[0] = Character.toUpperCase(chars[0]);
+			
+			for(int i=1; i<chars.length;i++)
+				if(Character.isSpaceChar(chars[i]))
+					if(Character.isLetter(chars[i+1]))
+						chars[i+1] = Character.toUpperCase(chars[i+1]);
 		
-		for(int i=1; i<chars.length;i++)
-			if(Character.isSpaceChar(chars[i]))
-				if(Character.isLetter(chars[i+1]))
-					chars[i+1] = Character.toUpperCase(chars[i+1]);
-		if(chars.length> 0)
 			return new String(chars);
+		}
 		return "";
 	}
 }
