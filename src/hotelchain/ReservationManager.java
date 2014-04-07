@@ -101,8 +101,7 @@ public class ReservationManager extends FileHandler
 					if(hotels[j].getName().equals(reservations.get(i).getHotelName()))
 						hotels[j].cancelReservation(reservations.get(i));
 				
-				if(!writeFile(reservations, reservationIDcounter))
-					System.out.println("ERROR: could not remove reservation from file");
+				writeFile(reservations, reservationIDcounter);					
 			}
 	}
 		
