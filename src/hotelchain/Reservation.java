@@ -20,7 +20,7 @@ public class Reservation implements Serializable
 
 	private String roomType; 
 	private boolean bridalSuite;
-	private int totalRate;
+	private int nightlyRate, totalRate;
 	private boolean cancelled;
 	
 	/**
@@ -37,16 +37,18 @@ public class Reservation implements Serializable
 	public Reservation(int _guestID, String _hotelName, int _roomNumber, String _roomType, Calendar resStartDate, Calendar resEndDate, int _rate, boolean _bridalSuite, int resID)
 	{
 		guestID = _guestID;
-	//	occupants = _occupants;
 		hotelName = _hotelName;
 		roomNumber = _roomNumber;
 		roomType = _roomType;
+		nightlyRate = _rate;
 		startDate = resStartDate;
 		endDate = resEndDate;
-		bridalSuite = _bridalSuite;
-		totalRate = _rate;    //TODO Calculate total rate.
+		bridalSuite = _bridalSuite;		
 		reservationID = resID;		
-		cancelled = false;
+		cancelled = false;		
+	
+		//TODO Fix this, test for all possibilities
+		totalRate = nightlyRate *  Integer.parseInt(Long.toString((endDate.getTimeInMillis() - startDate.getTimeInMillis()) /  (24*60*60*1000)));
 	}
 
 	/**
@@ -114,9 +116,17 @@ public class Reservation implements Serializable
 	}
 	
 	/**
+	 * @return Returns the nightly rate for this Room.
+	 */
+	public int getNightlyRate()
+	{
+		return nightlyRate;
+	}
+	
+	/**
 	 * @return Returns the total of this reservation.
 	 */
-	public int totalRate()
+	public int getTotalRate()
 	{
 		return totalRate;
 	}

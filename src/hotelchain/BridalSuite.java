@@ -18,12 +18,9 @@ public class BridalSuite extends Room
 		super(room, 2, rate);
 	}
 	
-	/* 
-	 * @see hotelchain.Room#isBridalSuite()
-	 */
 	@Override
-	public boolean isBridalSuite()
+	public String toString()
 	{
-		return true;
+		return "Bridal";
 	}
 }

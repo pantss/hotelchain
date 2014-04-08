@@ -166,10 +166,25 @@ public class Hotel implements Serializable
 	public String[] getTypesOfRooms()
 	{
 		return typesOfRooms;
-	}
-	//TODO REMOVE (?)
+	}	
+	
+	//TODO REMOVE (?) or comment. make sense!
 	public int getRateOfRoom(int roomNr)
 	{
 		return hotelRooms.get(roomNr-1).getRate();
+	}
+	
+	/**
+	 * Returns the nightly rate of a given type of room at this hotel.
+	 * @param roomType String representation of room type.
+	 * @return  Returns the nightly rate of a given type of room at this hotel.
+	 */
+	public int getRateOfRoom(String roomType)
+	{
+		for(int i=1; i<=hotelRooms.size(); i++)
+			if(hotelRooms.get(i-1).toString() == roomType)
+				return getRateOfRoom(i);
+		
+		return -1;
 	}
 }

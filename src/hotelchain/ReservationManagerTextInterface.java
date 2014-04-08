@@ -141,7 +141,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 							System.out.println("! Reservation cancelled.");
 						}							
 					}
-					else
+					else //TODO Not error if type unavailable, dont book until confirmed
 						System.out.println("! There was an error booking this reservation.");					
 				}								
 			}
@@ -314,7 +314,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		int choice = -1;
 		while(choice == -1)
 			choice = getUserChoice(0,options.length);
-		if(choice == 9)
+		if(choice == 9 && options.length <=9 || choice >= options.length)
 		{
 			System.out.println("! Cancelled.");
 			return null;
@@ -348,17 +348,24 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	 * @param startDate Desired start date of reservation.
 	 * @param endDate Desired end date of reservation.
 	 * @return Returns whether the bridal suite is desired as indicated by user input.
-	 * TODO comment block
+	 * TODO comment block, sensible null return.
 	 * TODO use roomtype instead of type of room everywhere
 	 * TODO exit option ------- 9
 	 */
 	private String showGetRoomType(Hotel hotel)
 	{
 		System.out.println("\n> What type of room would you like to book?");
-		printOptions(hotel.getTypesOfRooms(), false);
-		//TODO Print specific hotel's prices with these options.
+		String[] options = new String[hotel.getTypesOfRooms().length+1];
+		for(int i=0; i<hotel.getTypesOfRooms().length; i++)
+		{
+			options[i] = hotel.getTypesOfRooms()[i].concat("\n	Rate: " + hotel.getRateOfRoom(hotel.getTypesOfRooms()[i]) + " / night.");
+		}
+		options[options.length-1] = "Cancel";
+		printOptions(options, false);
 		
-		int choice = getUserChoice(1, hotel.getTypesOfRooms().length);
+		int choice = getUserChoice(1, options.length);
+		if((choice == 9 && options.length <= 9) || choice >= options.length)
+			return null;
 		
 		return hotel.getTypesOfRooms()[choice-1];
 	}
@@ -376,6 +383,8 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		print("Room #" + res.getRoomNumber() + " (" + res.getRoomType() + ")", "*");
 		print(reservationManager.calendarToString(res.getStartDate()), "*");
 		print("  - " + reservationManager.calendarToString(res.getEndDate()), "*");
+		print("Nightly rate: " + res.getNightlyRate(), "*");
+		print("Total cost: " + res.getTotalRate(), "*");
 		if(res.isCancelled())
 			print("! CANCELLED", "*");
 		System.out.println("  ***********************************");
@@ -384,6 +393,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	/**
 	 * Prints Reservation r to the screen as part of a table.
 	 * @param r Reservation to be printed.
+	 * TODO print cost
 	 */
 	private void printReservation(Reservation r)
 	{
@@ -393,6 +403,8 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		print(out2, "|");
 		print(" " + reservationManager.calendarToString(r.getStartDate()), "|");
 		print("   - " + reservationManager.calendarToString(r.getEndDate()),"|");
+		print("Nightly rate: " + r.getNightlyRate(), "|");
+		print("Total cost: " + r.getTotalRate(), "|");		
 	}
 	
 	/**

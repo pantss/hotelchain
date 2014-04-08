@@ -49,14 +49,6 @@ public class Room implements Serializable
 		return rate;
 	}
 	
-	/**
-	 * @return Returns whether this room is a bridal suite.
-	 */
-	public boolean isBridalSuite()
-	{
-		return false;
-	}
-	
 	@Override
 	public String toString()
 	{

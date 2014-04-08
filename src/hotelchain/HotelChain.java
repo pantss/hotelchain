@@ -38,10 +38,9 @@ public class HotelChain
 	
 	/**
 	 * Populates this hotel chain with its hotels.
-	 * TODO test	 */
+	 */
 	private void addHotels()
 	{
-		//TODO This 
 		for(int i=0; i<NUMBER_OF_HOTELS; i++)
 		{
 			int roomNrCtr = 1;			
@@ -57,23 +56,26 @@ public class HotelChain
 			for(int j=0; j < typeFrequency.length; j++)
 				for(int k=0; k < typeFrequency[j]; k++)
 				{
-					switch(j) //TODO rate by hotel
+					switch(j) 
 					{
-						case 0: hotels[i].addRoom(new SingleRoom(roomNrCtr, standardRate)); break;
-						case 1: hotels[i].addRoom(new DoubleRoom(roomNrCtr, standardRate));break;
-						case 2: hotels[i].addRoom(new QueensizeRoom(roomNrCtr, standardRate));break;
-						case 3: hotels[i].addRoom(new KingsizeRoom(roomNrCtr, standardRate));break;
-						case 4: hotels[i].addRoom(new FamilySuite(roomNrCtr, standardRate));break;
-						case 5: hotels[i].addRoom(new BridalSuite(roomNrCtr, standardRate));break;
+						case 0: hotels[i].addRoom(new SingleRoom(roomNrCtr, standardRate + (i*standardRate)/2)); break;
+						case 1: hotels[i].addRoom(new DoubleRoom(roomNrCtr,  standardRate + (1 + i)*standardRate/(2)));break;
+						case 2: hotels[i].addRoom(new QueensizeRoom(roomNrCtr, standardRate + (2 + i)*standardRate/(2)));break;
+						case 3: hotels[i].addRoom(new KingsizeRoom(roomNrCtr, standardRate + (3 + i)*standardRate/(2)));break;
+						case 4: hotels[i].addRoom(new FamilySuite(roomNrCtr, standardRate + (3 + 5*i)*standardRate/(2)));break;
+						case 5: hotels[i].addRoom(new BridalSuite(roomNrCtr, standardRate + (10 + 3*i*i)*standardRate/(2)));break;
 						default: //TODO default
 					}
+				
 					roomNrCtr++;	
+					
+					
 				}
 			while(roomNrCtr <= roomsInHotel[i])       // Fill family suites up with modulo values of ratios used in typeFrequency[] to complete hotel population. 
 			{
-				 hotels[i].addRoom(new FamilySuite(roomNrCtr, standardRate));
+				 hotels[i].addRoom(new FamilySuite(roomNrCtr, (3 + 5*i)*standardRate/(2)));
 				 roomNrCtr++;
-			}	
+			}				
 		}
 			
 	}
