@@ -19,6 +19,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	 * Constructs an instance of a textual reservation management interface, extending the GuestRegistration textual interface.
 	 * @param _reservationManager Reservation manager this class provides a text-based interface for.
 	 * @param _guestRegistration Guest registration providing information to the reservation manager.
+	 * TODO current guests/reservations: line out ID with ID |
 	 */
 	public ReservationManagerTextInterface(ReservationManager _reservationManager, GuestRegistration _guestRegistration)
 	{
@@ -108,7 +109,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			guestRegistered = true;
 		if(guestRegistered)
 		{	
-			//Can be substituted with showFindGuests (needs to be made protected then)
+			//Can be substituted with showFindGuests (needs to be "protected" in that case)
 			displayGuestsInformation();
 			
 			System.out.println("> Please enter ID of guest to book a room for: ");
@@ -123,14 +124,12 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 				printGuestInfo(guest, true);
 				chosenHotel = showChooseHotel();
 				if(chosenHotel != null)
-				{						
+				{				
+					String roomType = showGetRoomType(chosenHotel);
 					System.out.println("Today is: " +reservationManager.calendarToString(currentDate));		
 					startDate = showGetDesiredDate("Arrival");
 					endDate = showGetDesiredDate("Departure");
-					
-					boolean bridalDesired = showGetBridalDesired(chosenHotel, startDate, endDate);			
-					
-					Reservation newReservation = reservationManager.reserveRoom(guest, chosenHotel, startDate, endDate, bridalDesired);					
+					Reservation newReservation = reservationManager.reserveRoom(guest, chosenHotel, roomType, startDate, endDate);					
 					if(newReservation != null)
 					{
 						printReservationInfo(newReservation);						
@@ -337,6 +336,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			String input = getUserInput();
 			desiredDate= convertInputToDate(input);
 		}
+		
 		System.out.println("Date entered: " + reservationManager.calendarToString(desiredDate));
 		
 		return desiredDate;
@@ -348,11 +348,19 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	 * @param startDate Desired start date of reservation.
 	 * @param endDate Desired end date of reservation.
 	 * @return Returns whether the bridal suite is desired as indicated by user input.
+	 * TODO comment block
+	 * TODO use roomtype instead of type of room everywhere
+	 * TODO exit option ------- 9
 	 */
-	private boolean showGetBridalDesired(Hotel hotel, Calendar startDate, Calendar endDate)
+	private String showGetRoomType(Hotel hotel)
 	{
-		System.out.println("> Would you like to book the bridal suite (if available)?");
-		return promptInputConfirmation(false);		
+		System.out.println("\n> What type of room would you like to book?");
+		printOptions(hotel.getTypesOfRooms(), false);
+		//TODO Print specific hotel's prices with these options.
+		
+		int choice = getUserChoice(1, hotel.getTypesOfRooms().length);
+		
+		return hotel.getTypesOfRooms()[choice-1];
 	}
 	
 	/**
@@ -365,11 +373,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		print("Reservation ID: " + res.getID(), "*");
 		print("-------------------------- ", "*");
 		print(guestRegistration.getGuest(res.getGuestID()).getName(), "*");
-		print(res.getHotelName(), "*");
-		if(res.isBridalSuite())
-			print("Room: Bridal Suite", "*");
-		else
-			print("Room #" + res.getRoomNumber(), "*");
+		print("Room #" + res.getRoomNumber() + " (" + res.getRoomType() + ")", "*");
 		print(reservationManager.calendarToString(res.getStartDate()), "*");
 		print("  - " + reservationManager.calendarToString(res.getEndDate()), "*");
 		if(res.isCancelled())
@@ -385,10 +389,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	{
 		print(r.getID() + ": " + guestRegistration.getGuest(r.getGuestID()).getName() + " (" + r.getGuestID() + ")", "|");		
 		String out2 = " at " + r.getHotelName();
-		if(r.isBridalSuite())
-			out2 = out2.concat(", the Bridal Suite");
-		else
-			out2 = out2.concat(", Room #" + r.getRoomNumber());
+		out2 = out2.concat(", Room #" + r.getRoomNumber() + " (" + r.getRoomType() + ")");
 		print(out2, "|");
 		print(" " + reservationManager.calendarToString(r.getStartDate()), "|");
 		print("   - " + reservationManager.calendarToString(r.getEndDate()),"|");
@@ -397,6 +398,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	/**
 	 * Checks whether there are currently no reservations booked by guests who were removed from the system. 
 	 * Moves any reservations that are booked by a removed guest to the relative archive.
+	 * TODO Not in manager?
 	 */
 	private void checkForRemovedGuests()
 	{

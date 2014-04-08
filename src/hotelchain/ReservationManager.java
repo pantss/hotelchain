@@ -2,6 +2,8 @@ package hotelchain;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
@@ -9,7 +11,7 @@ import java.text.SimpleDateFormat;
  * Extends the FileHandler class in order to be able to store guest registration information to a file. 
  * The variable filename may be adapted to reflect a desired file name.
  * @author Joost Janssen
- * TODO Future features: reserve for multiple people, # of beds in a room, pricing, check in/out, read archive if desired.
+ * TODO Future features:pricing, check in/out, read archive if desired.
  */
 public class ReservationManager extends FileHandler
 {
@@ -62,20 +64,15 @@ public class ReservationManager extends FileHandler
 	 * Reserve a room for a guest at a hotel at a certain time. Returns the resulting Reservation.
 	 * @param resGuest Guest reserving a room.
 	 * @param resHotel Reserved Hotel. 
+	 * @param roomType Type of Room.
 	 * @param resStartDate Start date of reservation.
 	 * @param resEndDate End date of reservation.
-	 * @param bridalSuite Indicates whether a bridal suite is desired.
 	 * @return Returns the resulting reservation made. Returns null if desired reservation could not be made.
 	 */
-	public Reservation reserveRoom(Guest resGuest, Hotel resHotel, Calendar resStartDate, Calendar resEndDate, boolean bridalSuite)
+	public Reservation reserveRoom(Guest resGuest, Hotel resHotel, String roomType, Calendar resStartDate, Calendar resEndDate)
 	{
-		Reservation reservation = null;
-	
-		if(bridalSuite)
-			reservation = resHotel.reserveBridalSuite(resGuest, resStartDate, resEndDate, reservationIDcounter);
-		else
-			reservation = resHotel.reserveRoom(resGuest, resStartDate, resEndDate, reservationIDcounter);
-		
+		Reservation	reservation = resHotel.reserveRoom(resGuest, resStartDate, resEndDate, roomType, reservationIDcounter);
+
 		if(reservation != null)
 		{ 
 			reservations.add(reservation);
@@ -214,5 +211,16 @@ public class ReservationManager extends FileHandler
 	public String calendarToString(Calendar date)
 	{
 		return dateFormat.format(date.getTime());
+	}
+	
+	/**
+	 * Converts a given date in String format (dateformatted) to Date format.
+	 * @param date Date to convert to Date.
+	 * @return Returns a Date representation of given date.
+	 * @throws ParseException Failed to convert String to Date.
+	 */
+	public Date stringToCalendar(String date) throws ParseException
+	{
+		return (Date) dateFormat.parse(date);
 	}
 }

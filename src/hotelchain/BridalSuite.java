@@ -1,7 +1,7 @@
 package hotelchain;
 
 /**
- * Represents a Bridal Suite, a special type of hotel room.
+ * Represents a Bridal Suite, a special type of hotel Room containing a kingsize bed, accommodating 2 occupants.
  * @author Joost Janssen
  */
 public class BridalSuite extends Room
@@ -11,10 +11,11 @@ public class BridalSuite extends Room
 	/**
 	 * Constructs a new bridal suite with room number room
 	 * @param room Room number of this bridal suite.
+	 * @param rate Nightly rate
 	 */
-	public BridalSuite(int room)
+	public BridalSuite(int room,int rate)
 	{
-		super(room);
+		super(room, 2, rate);
 	}
 	
 	/* 

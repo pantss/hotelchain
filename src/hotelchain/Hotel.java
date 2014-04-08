@@ -1,5 +1,6 @@
 package hotelchain;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -13,26 +14,37 @@ public class Hotel implements Serializable
 	private static final long serialVersionUID = 3061856451553104034L;
 	private final int numberOfRooms;
 	private final String name;
-	private final Room[] hotelRooms;
-	private final int bridalSuiteNumber;
+	private final ArrayList<Room> hotelRooms;
+	private final String[] typesOfRooms;
+//	private final String[] typesOfRooms;
+//	private final int[][] roomDistribution;
+//	private final int bridalSuiteNumber;
 	private ArrayList<Reservation> upcomingReservations;
 
 	/**
 	 * Constructs an instance of a Hotel. 
 	 * @param _name Name of this hotel.
 	 * @param rooms Number of rooms in this hotel.
+	 * TODO comment
 	 */
-	public Hotel(String _name, int rooms)
+	public Hotel(String _name, int rooms, String[] _typesOfRooms)
 	{
 		name = _name;
 		numberOfRooms = rooms;
+		typesOfRooms = _typesOfRooms;
+		
 		upcomingReservations = new ArrayList<Reservation>();
 		
-		hotelRooms = new Room[rooms];		
-		for(int i=0; i<hotelRooms.length-1; i++)
-			hotelRooms[i] = new Room(i+1);		
-		hotelRooms[hotelRooms.length-1] = new BridalSuite(hotelRooms.length);
-		bridalSuiteNumber = hotelRooms.length;		
+		hotelRooms = new ArrayList<Room>();	
+	}
+	
+	/**
+	 * Adds a given room to the list of rooms in this Hotel.
+	 * @param room Room to add.
+	 */
+	public void addRoom(Room room)
+	{
+		hotelRooms.add(room);
 	}
 	
 	/**
@@ -42,19 +54,23 @@ public class Hotel implements Serializable
 	 * @param endDate Departure date of guest.
 	 * @param reservationID Reservation ID number.
 	 * @return Returns the resulting Reservation.
+	 * TODO comment
 	 */
-	public Reservation reserveRoom(Guest guest, Calendar startDate, Calendar endDate, int reservationID)
+	public Reservation reserveRoom(Guest guest, Calendar startDate, Calendar endDate, String roomType, int reservationID)
 	{
-		Room freeRoom = getFreeRoom(startDate, endDate);
-		if(freeRoom!=null)
+		int	roomNr = getFreeRoom(startDate, endDate, roomType);
+		if(roomNr!= -1 )
 		{
-			Reservation reservation = new Reservation(guest.getID(), this.getName(), freeRoom.getRoomNumber(), startDate, endDate, false, reservationID);
+			Reservation reservation = new Reservation(guest.getID(), this.getName(), roomNr, roomType, startDate, endDate, hotelRooms.get(roomNr-1).getRate(), false, reservationID);
+			
 			addReservation(reservation);
 			
 			return reservation;
 		}
 		return null;
 	}
+	
+	
 	
 	/**
 	 * Adds a reservation to the list of upcoming reservations of this Hotel. 
@@ -73,21 +89,8 @@ public class Hotel implements Serializable
 	 * @param endDate Departure date of guest.
 	 * @param reservationID Reservation ID number.
 	 * @return Returns the resulting Reservation of the bridal suite. If bridal suite is unavailable, returns a Reservation of a regular Room.
+	 * TODO multiple bridal suites
 	 */
-	public Reservation reserveBridalSuite(Guest guest, Calendar startDate, Calendar endDate, int reservationID)
-	{
-		Reservation reservation = null;
-		
-		if(isRoomAvailableBetween(bridalSuiteNumber, startDate, endDate))
-			reservation = new Reservation(guest.getID(), this.getName(), bridalSuiteNumber, startDate, endDate, true, reservationID);
-		else
-			 reservation =  reserveRoom(guest, startDate, endDate, reservationID);	
-		
-		addReservation(reservation);
-		
-		return reservation;		
-	}
-	
 	/**
 	 * Cancels a given Reservation at this hotel.
 	 * @param reservation Reservation to be cancelled.
@@ -101,15 +104,17 @@ public class Hotel implements Serializable
 	 * Finds an unreserved room in this hotel during a given time frame. 
 	 * @param startDate Start date of time frame.
 	 * @param endDate End date of time frame.
-	 * @return Returns an available Room during the given time frame, or null when none is available.
+	 * @return Returns an available Room during the given time frame, or -1 when none is available.
+	 * TODO Comment
 	 */
-	private Room getFreeRoom(Calendar startDate, Calendar endDate)
+	private int getFreeRoom(Calendar startDate, Calendar endDate, String roomType)
 	{
-		for(int i=1; i<=hotelRooms.length; i++)
-			if(isRoomAvailableBetween(i, startDate, endDate))
-				return hotelRooms[i-1];
+		for(int i=1; i<=hotelRooms.size(); i++)
+			if(hotelRooms.get(i-1).toString() == roomType)
+				if(isRoomAvailableBetween(i, startDate, endDate))
+					return i;
 		
-		return null;
+		return -1;
 	}
 	
 	/**
@@ -153,5 +158,18 @@ public class Hotel implements Serializable
 	public int getNumberOfRooms()
 	{
 		return numberOfRooms;
+	}
+	
+	/**
+	 * @return Returns the types of rooms in this hotel.
+	 */
+	public String[] getTypesOfRooms()
+	{
+		return typesOfRooms;
+	}
+	//TODO REMOVE (?)
+	public int getRateOfRoom(int roomNr)
+	{
+		return hotelRooms.get(roomNr-1).getRate();
 	}
 }

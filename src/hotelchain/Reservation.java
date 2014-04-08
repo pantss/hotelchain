@@ -13,11 +13,14 @@ public class Reservation implements Serializable
 	private static final long serialVersionUID = -8903154660483910256L;
 	private Calendar startDate;
 	private Calendar endDate;
-	private final int reservationID;
-	private final int guestID;
+	private final int reservationID, guestID;
+//TODO repeat	private final int guestID;
 	private String hotelName;
 	private int roomNumber;
+
+	private String roomType; 
 	private boolean bridalSuite;
+	private int totalRate;
 	private boolean cancelled;
 	
 	/**
@@ -29,15 +32,19 @@ public class Reservation implements Serializable
 	 * @param resEndDate End date of this reservation.
 	 * @param _bridalSuite Indicates whether this reservation is for a bridal suite.
 	 * @param resID ID number of this reservation.
+	 * TODO Comment, occupants
 	 */
-	public Reservation(int _guestID, String _hotelName, int _roomNumber, Calendar resStartDate, Calendar resEndDate, boolean _bridalSuite, int resID)
+	public Reservation(int _guestID, String _hotelName, int _roomNumber, String _roomType, Calendar resStartDate, Calendar resEndDate, int _rate, boolean _bridalSuite, int resID)
 	{
 		guestID = _guestID;
+	//	occupants = _occupants;
 		hotelName = _hotelName;
 		roomNumber = _roomNumber;
+		roomType = _roomType;
 		startDate = resStartDate;
 		endDate = resEndDate;
 		bridalSuite = _bridalSuite;
+		totalRate = _rate;    //TODO Calculate total rate.
 		reservationID = resID;		
 		cancelled = false;
 	}
@@ -75,6 +82,14 @@ public class Reservation implements Serializable
 	}
 	
 	/**
+	 * @return Returns the type of room reserved.
+	 */
+	public String getRoomType()
+	{
+		return roomType;
+	}
+	
+	/**
 	 * @return Returns the start date of this reservation.
 	 */
 	public Calendar getStartDate()
@@ -97,6 +112,15 @@ public class Reservation implements Serializable
 	{
 		return bridalSuite;
 	}
+	
+	/**
+	 * @return Returns the total of this reservation.
+	 */
+	public int totalRate()
+	{
+		return totalRate;
+	}
+	
 	/**
 	 * @return Returns the ID number of this reservation.
 	 */

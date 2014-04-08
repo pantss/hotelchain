@@ -74,6 +74,16 @@ public class HotelChainTextInterface extends TextInterface
 			print(out2, "|");
 		}
 		printSingleLine();
+		
+		for(int i=0; i < hotels.length; i++)
+		{
+			print(hotels[i].getName(), "|");
+			for(int j=1; j <= hotels[i].getNumberOfRooms(); j++)
+					print("room " + j + " rate "   + hotels[i].getRateOfRoom(j), "|");
+			printSingleLine();
+		}
+		
+		
 		print("Total number of reservations: " + chain.getReservationManager().getNumberOfReservations(), "|");
 		printDoubleLine();
 	}	
