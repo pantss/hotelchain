@@ -15,7 +15,7 @@ public class HotelChain
 	
 	private final int NUMBER_OF_HOTELS = 3;	
 	private final String[] hotelNames = new String[] { "SimpleHotel", "MediocreHotel", "FancyHotel" };
-	private final String[] typesOfRooms = new String[]{"Single", "Double", "Queensize", "Kingsize", "Family", "Bridal"}; 
+	private final String[] roomTypes = new String[]{"Single", "Double", "Queensize", "Kingsize", "Family", "Bridal"}; 
 	private final int[] roomsInHotel = new int[] { 60, 60, 80 };
 	private final int standardRate = 50; //Nightly rate for a single bed in the cheapest hotel, to be used as baseline.	
 	
@@ -44,7 +44,7 @@ public class HotelChain
 		for(int i=0; i<NUMBER_OF_HOTELS; i++)
 		{
 			int roomNrCtr = 1;			
-			hotels[i] = new Hotel(hotelNames[i], roomsInHotel[i], typesOfRooms);
+			hotels[i] = new Hotel(hotelNames[i], roomsInHotel[i], roomTypes);
 			
 			int[] typeFrequency = { roomsInHotel[i] /10,  	 		// Ratio of single rooms.
 									roomsInHotel[i] / 5,			// Ratio of double rooms.
@@ -64,7 +64,7 @@ public class HotelChain
 						case 3: hotels[i].addRoom(new KingsizeRoom(roomNrCtr, standardRate + (3 + i)*standardRate/(2)));break;
 						case 4: hotels[i].addRoom(new FamilySuite(roomNrCtr, standardRate + (3 + 5*i)*standardRate/(2)));break;
 						case 5: hotels[i].addRoom(new BridalSuite(roomNrCtr, standardRate + (10 + 3*i*i)*standardRate/(2)));break;
-						default: //TODO default
+						default: hotels[i].addRoom(new Room(roomNrCtr, 1, standardRate));//TODO check sanity
 					}
 				
 					roomNrCtr++;	

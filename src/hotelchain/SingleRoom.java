@@ -9,6 +9,7 @@ public class SingleRoom extends Room
 	private static final long serialVersionUID = 5790021076629102015L;
 
 	/**
+	 * Constructs a new Single room.
 	 * @param _roomNumber Room number.
 	 * @param _rate Nightly rate.
 	 */

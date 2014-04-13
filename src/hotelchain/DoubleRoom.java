@@ -9,6 +9,7 @@ public class DoubleRoom extends Room
 	private static final long serialVersionUID = -5013125088845854614L;
 
 	/**
+	 * Contructs a new Double room.
 	 * @param _roomNumber Room number.
 	 * @param _rate Nightly rate.
 	 */

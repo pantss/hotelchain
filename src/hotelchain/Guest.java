@@ -10,10 +10,7 @@ import java.io.Serializable;
 public class Guest  implements Serializable
 {
 	private static final long serialVersionUID = -2659809038612587271L;
-	private final String name;
-	private final String address;
-	private final String city;
-	private final String country;
+	private final String name, address, city, country;
 	private final int guestID;
 	
 	/**

@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
  * Extends the FileHandler class in order to be able to store guest registration information to a file. 
  * The variable filename may be adapted to reflect a desired file name.
  * @author Joost Janssen
- * TODO Future features:pricing, check in/out, read archive if desired.
+ * TODO Future features: room&pricing managers, check in/out, read archive if desired.
  */
 public class ReservationManager extends FileHandler
 {

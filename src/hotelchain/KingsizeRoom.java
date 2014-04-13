@@ -9,6 +9,7 @@ public class KingsizeRoom extends Room
 	private static final long serialVersionUID = -8504496275498754646L;
 
 	/**
+	 * Constructs a new Kingsize room.
 	 * @param _roomNumber Room number.
 	 * @param _rate Nightly rate.
 	 */

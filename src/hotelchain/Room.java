@@ -9,12 +9,10 @@ import java.io.Serializable;
 public class Room implements Serializable 
 {
 	private static final long serialVersionUID = -3251826277669516453L;
-	private int roomNumber;
-	private int beds;
-	private int rate;
+	private int roomNumber, beds, rate;
 	
 	/**
-	 * Constructs an instance of a room.
+	 * Constructs an instance of a Room.
 	 * @param room Room number of this room.
 	 * TODO Comment
 	 */

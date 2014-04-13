@@ -11,17 +11,11 @@ import java.util.Calendar;
 public class Reservation implements Serializable
 {
 	private static final long serialVersionUID = -8903154660483910256L;
-	private Calendar startDate;
-	private Calendar endDate;
-	private final int reservationID, guestID;
-//TODO repeat	private final int guestID;
-	private String hotelName;
-	private int roomNumber;
-
-	private String roomType; 
-	private boolean bridalSuite;
-	private int nightlyRate, totalRate;
+	private Calendar startDate, endDate;
+	private final int reservationID, guestID, roomNumber,nightlyRate, totalRate;
+	private String hotelName, roomType;
 	private boolean cancelled;
+	//TODO repeat	private final int guestID;
 	
 	/**
 	 * Constructs a new Reservation with given guest ID number, hotel name, room number, start and end dates and reservation ID.
@@ -30,11 +24,10 @@ public class Reservation implements Serializable
 	 * @param _roomNumber Room number of Room booked by this reservation.
 	 * @param resStartDate Start date of this reservation.
 	 * @param resEndDate End date of this reservation.
-	 * @param _bridalSuite Indicates whether this reservation is for a bridal suite.
 	 * @param resID ID number of this reservation.
-	 * TODO Comment, occupants
+	 * TODO Comment
 	 */
-	public Reservation(int _guestID, String _hotelName, int _roomNumber, String _roomType, Calendar resStartDate, Calendar resEndDate, int _rate, boolean _bridalSuite, int resID)
+	public Reservation(int _guestID, String _hotelName, int _roomNumber, String _roomType, Calendar resStartDate, Calendar resEndDate, int _rate, int resID)
 	{
 		guestID = _guestID;
 		hotelName = _hotelName;
@@ -43,7 +36,6 @@ public class Reservation implements Serializable
 		nightlyRate = _rate;
 		startDate = resStartDate;
 		endDate = resEndDate;
-		bridalSuite = _bridalSuite;		
 		reservationID = resID;		
 		cancelled = false;		
 	
@@ -105,14 +97,6 @@ public class Reservation implements Serializable
 	public Calendar getEndDate()
 	{
 		return endDate;
-	}
-	
-	/**
-	 * @return Returns whether this Reservation is for a bridal suite.
-	 */
-	public boolean isBridalSuite()
-	{
-		return bridalSuite;
 	}
 	
 	/**

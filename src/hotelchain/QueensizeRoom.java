@@ -9,6 +9,7 @@ public class QueensizeRoom extends Room
 	private static final long serialVersionUID = 5767445757518415158L;
 
 	/**
+	 * Constructs a new Queensize room.
 	 * @param _roomNumber Room number.
 	 * @param _rate Nightly rate.
 	 */

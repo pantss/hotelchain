@@ -139,17 +139,17 @@ public class TextInterface
 	{
 		System.out.println();
 		printDoubleLine();
-		print(header, "|");
+		print(header);
 		printDoubleLine();
 	}
 	
 	/**
-	 * Prints a given string surrounded by Strings "border". Extends to next line (within borders) if necessary.
+	 * Prints a given string surrounded by borders. Extends to next line (within borders) if necessary.
 	 * @param string String to print between borders.
-	 * @param border Border String.
 	 */
-	protected void print(String string, String border)
+	protected void print(String string)
 	{
+		String border = "|";
 		if(!string.startsWith(" " + border))
 			string = " ".concat(border + " " + string);
 		int borderLimit = 37;
@@ -170,8 +170,8 @@ public class TextInterface
 					splitIndex = j;
 					j=-1;
 				}
-			print(string.substring(0, splitIndex), border);
-			print(string.substring(0, i-1).concat(string.substring(splitIndex, string.length())), border);		
+			print(string.substring(0, splitIndex));
+			print(string.substring(0, i-1).concat(string.substring(splitIndex, string.length())));		
 		}
 		else
 		{	

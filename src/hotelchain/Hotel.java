@@ -1,6 +1,5 @@
 package hotelchain;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -13,12 +12,9 @@ public class Hotel implements Serializable
 {
 	private static final long serialVersionUID = 3061856451553104034L;
 	private final int numberOfRooms;
-	private final String name;
+	private final String name;	
+	private final String[] roomTypes;
 	private final ArrayList<Room> hotelRooms;
-	private final String[] typesOfRooms;
-//	private final String[] typesOfRooms;
-//	private final int[][] roomDistribution;
-//	private final int bridalSuiteNumber;
 	private ArrayList<Reservation> upcomingReservations;
 
 	/**
@@ -27,11 +23,11 @@ public class Hotel implements Serializable
 	 * @param rooms Number of rooms in this hotel.
 	 * TODO comment
 	 */
-	public Hotel(String _name, int rooms, String[] _typesOfRooms)
+	public Hotel(String _name, int rooms, String[] _roomTypes)
 	{
 		name = _name;
 		numberOfRooms = rooms;
-		typesOfRooms = _typesOfRooms;
+		roomTypes = _roomTypes;
 		
 		upcomingReservations = new ArrayList<Reservation>();
 		
@@ -61,7 +57,7 @@ public class Hotel implements Serializable
 		int	roomNr = getFreeRoom(startDate, endDate, roomType);
 		if(roomNr!= -1 )
 		{
-			Reservation reservation = new Reservation(guest.getID(), this.getName(), roomNr, roomType, startDate, endDate, hotelRooms.get(roomNr-1).getRate(), false, reservationID);
+			Reservation reservation = new Reservation(guest.getID(), this.getName(), roomNr, roomType, startDate, endDate, hotelRooms.get(roomNr-1).getRate(), reservationID);
 			
 			addReservation(reservation);
 			
@@ -82,15 +78,6 @@ public class Hotel implements Serializable
 			upcomingReservations.add(reservation);
 	}
 	
-	/**
-	 * Reserves the bridal suite of this hotel. If bridal suite is unavailable, reserve a normal room at this hotel.
-	 * @param guest Guest to book reservation.
-	 * @param startDate Arrival date of guest.
-	 * @param endDate Departure date of guest.
-	 * @param reservationID Reservation ID number.
-	 * @return Returns the resulting Reservation of the bridal suite. If bridal suite is unavailable, returns a Reservation of a regular Room.
-	 * TODO multiple bridal suites
-	 */
 	/**
 	 * Cancels a given Reservation at this hotel.
 	 * @param reservation Reservation to be cancelled.
@@ -163,12 +150,17 @@ public class Hotel implements Serializable
 	/**
 	 * @return Returns the types of rooms in this hotel.
 	 */
-	public String[] getTypesOfRooms()
+	public String[] getRoomTypes()
 	{
-		return typesOfRooms;
+		return roomTypes;
 	}	
 	
-	//TODO REMOVE (?) or comment. make sense!
+	
+	/**
+	 * Returns the rate of the room with room number roomNr at this hotel.
+	 * @param roomNr Room number.
+	 * @return Returns the rate of the room with room number roomNr at this hotel.
+	 */
 	public int getRateOfRoom(int roomNr)
 	{
 		return hotelRooms.get(roomNr-1).getRate();

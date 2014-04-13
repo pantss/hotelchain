@@ -62,7 +62,7 @@ public class HotelChainTextInterface extends TextInterface
 		Hotel[] hotels = chain.getHotels();
 		
 		printHeader("About " + chain.getName());
-		print("Hotel" + "                " + "No. of Rooms", "|");
+		print("Hotel" + "                " + "No. of Rooms");
 		printSingleLine();
 		
 		for(int i=0; i<hotels.length;i++)
@@ -71,20 +71,19 @@ public class HotelChainTextInterface extends TextInterface
 			for(int j = out2.length(); j<27; j++)
 				out2 = out2.concat(" ");						
 			out2 = out2.concat(" " + hotels[i].getNumberOfRooms());	
-			print(out2, "|");
+			print(out2);
 		}
 		printSingleLine();
-		
+		//TODO Clean up output
 		for(int i=0; i < hotels.length; i++)
 		{
-			print(hotels[i].getName(), "|");
+			print(hotels[i].getName());
 			for(int j=1; j <= hotels[i].getNumberOfRooms(); j++)
-					print("room " + j + " rate "   + hotels[i].getRateOfRoom(j), "|");
+					print("room " + j + " rate "   + hotels[i].getRateOfRoom(j));
 			printSingleLine();
-		}
+		}		
 		
-		
-		print("Total number of reservations: " + chain.getReservationManager().getNumberOfReservations(), "|");
+		print("Total number of reservations: " + chain.getReservationManager().getNumberOfReservations());
 		printDoubleLine();
 	}	
 }

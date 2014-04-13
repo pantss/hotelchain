@@ -9,6 +9,7 @@ public class FamilySuite extends Room
 	private static final long serialVersionUID = 8934183177613282629L;
 
 	/**
+	 * Constructs a new Family Suite.
 	 * @param _roomNumber Room number.
 	 * @param _rate Nightly rate.
 	 */
