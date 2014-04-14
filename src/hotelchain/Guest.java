@@ -41,7 +41,7 @@ public class Guest  implements Serializable
 	/**
 	 * @return Returns this guest's name.
 	 */
-	public String getName()
+	protected String getName()
 	{
 		return name;
 	}
@@ -49,7 +49,7 @@ public class Guest  implements Serializable
 	/**
 	 * @return Returns this guest's city.
 	 */
-	public String getCity()
+	protected String getCity()
 	{
 		return city;
 	}	
@@ -57,7 +57,7 @@ public class Guest  implements Serializable
 	/**
 	 * @return Returns this guest's address.
 	 */
-	public String getAddress()
+	protected String getAddress()
 	{
 		return address;
 	}
@@ -65,7 +65,7 @@ public class Guest  implements Serializable
 	/**
 	 * @return  Returns this guest's country.
 	 */
-	public String getCountry()
+	protected String getCountry()
 	{
 		return country;
 	}

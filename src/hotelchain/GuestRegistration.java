@@ -5,19 +5,17 @@ import java.util.ArrayList;
 /**
  * Manages the administration of guests of a hotel chain.
  * Extends the FileHandler class in order to be able to store guest registration information to a file. 
- * The variable filename may be adapted to reflect a desired file name.
  * @author Joost Janssen
  */
 public class GuestRegistration extends FileHandler
 {
 	private  ArrayList<Guest> guests;
-	private int guestIDcounter;
-	
+	private int guestIDcounter;	
 	private final static  String filename = "hotelchain.registeredGuests";
 
 	/**
 	 * Constructs an instance of the guest registration management system.
-	 * Reads existing guests from file with file name. IF file does not exists, creates a new, empty file.
+	 * Reads existing guests from file "filename". If file does not exists, creates a new, empty file.
 	 */
 	@SuppressWarnings("unchecked")
 	public GuestRegistration() 
@@ -34,13 +32,13 @@ public class GuestRegistration extends FileHandler
 	
 	/**
 	 * Registers a new guest of the hotel chain given their personal information and returns its guest ID number.
-	 * @param name Guest's name
-	 * @param address Guest's address
-	 * @param city Guest's city
-	 * @param country Guest's country
+	 * @param name Guest's name.
+	 * @param address Guest's address.
+	 * @param city Guest's city.
+	 * @param country Guest's country.
 	 * @return Returns the newly registered guest's ID number.
 	 */
-	public int registerNewGuest(String name, String address, String city, String country)
+	protected int registerNewGuest(String name, String address, String city, String country)
 	{		
 		Guest newGuest = new Guest(name, address, city, country, guestIDcounter++);
 		guests.add(newGuest);
@@ -49,15 +47,14 @@ public class GuestRegistration extends FileHandler
 			return newGuest.getID();
 		
 		return -1;
-	}
-	
+	}	
 
 	/**
 	 * Removes a given guest's information from the hotel chain's systems.
 	 * @param guest Guest to be removed.
 	 * @return Returns whether the guest was successfully removed.
 	 */
-	public boolean removeGuest(Guest guest)
+	protected boolean removeGuest(Guest guest)
 	{
 		if(guest!=null)
 		{
@@ -71,10 +68,10 @@ public class GuestRegistration extends FileHandler
 	
 	/**
 	 * Finds a guest's ID number based on (part of) their name.
-	 * @param name Name given to match guest ID number to
+	 * @param name Name given to match guest ID number to.
 	 * @return Returns guest ID belong to the given name or null if no match was found.
 	 */
-	public ArrayList<Guest> findGuestID(String name)
+	protected ArrayList<Guest> findGuestID(String name)
 	{
 		ArrayList<Guest> hits = new ArrayList<Guest>();
 		if(name!=null)
@@ -91,7 +88,7 @@ public class GuestRegistration extends FileHandler
 	 * @param guestID Guest ID number 
 	 * @return Returns the guest whose ID number was given or null if no match was found. 	
 	 */
-	public Guest getGuest(int guestID)
+	protected Guest getGuest(int guestID)
 	{
 		if(guestID>=0)
 			for(int i=0; i<guests.size();i++)
@@ -102,9 +99,9 @@ public class GuestRegistration extends FileHandler
 	}	
 		
 	/**
-	 * @return Returns the number of guests currently registered with this hotel chain.
+	 * @return Returns the number of guests currently registered at this hotel chain.
 	 */
-	public int getNumberOfRegisteredGuests()
+	protected int getNumberOfRegisteredGuests()
 	{
 		return guests.size();
 	}	
@@ -112,7 +109,7 @@ public class GuestRegistration extends FileHandler
 	/**
 	 * @return Returns the current guestIDcounter.
 	 */
-	public int getGuestIDcounter()
+	protected int getGuestIDcounter()
 	{
 		return guestIDcounter;
 	}
