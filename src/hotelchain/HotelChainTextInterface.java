@@ -39,7 +39,7 @@ public class HotelChainTextInterface extends TextInterface
 							"Exit Menu"};	
 		
 		printOptions(options, true);			
-		int choice = getUserChoice(1,options.length);		
+		int choice = getUserChoice(0,options.length);		
 		switch(choice)
 		{
 			case 1: 
@@ -74,12 +74,12 @@ public class HotelChainTextInterface extends TextInterface
 			print(out2);
 		}
 		printSingleLine();
+		//TODO Clean up output
 		for(int i=0; i < hotels.length; i++)
 		{
 			print(hotels[i].getName());
-			print("------------");
-			for(int j=0; j < hotels[i].getRoomTypes().length; j++)
-					print(hotels[i].getRoomTypes()[j] + " Room at "  + hotels[i].getRateOfRoom(hotels[i].getRoomTypes()[j]) + " a night.");
+			for(int j=1; j <= hotels[i].getNumberOfRooms(); j++)
+					print("room " + j + " rate "   + hotels[i].getRateOfRoom(j));
 			printSingleLine();
 		}		
 		

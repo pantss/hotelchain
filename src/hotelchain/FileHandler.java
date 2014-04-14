@@ -14,7 +14,8 @@ import java.util.ArrayList;
  */
 public class FileHandler 
 {
-	private int IDcounter;	
+	private int IDcounter;
+	
 	private final String filename;
 	private ObjectOutputStream outputStream;
 	private ObjectInputStream inputStream;
@@ -41,17 +42,21 @@ public class FileHandler
 	 */
 	protected ArrayList<?> readFile()
 	{
-		ArrayList<?> accounts= null;
-		boolean failed = false;		
-		try {
-			inputStream = new ObjectInputStream(new FileInputStream(filename));
-		}catch (IOException e) {
-			System.out.println("There was an error reading the file: Could not open file " + filename);
-			failed = true;				
-			System.out.println("Attention: new, empty file created: " + filename);
-			IDcounter =0;
-			writeFile(accounts, IDcounter);
-		}
+			ArrayList<?> accounts= null;
+			boolean failed = false;
+			
+			try {
+				inputStream = new ObjectInputStream(new FileInputStream(filename));
+			}catch (IOException e) {
+				System.out.println("There was an error reading the file: Could not open file " + filename);
+				failed = true;
+				
+				System.out.println("Attention: new, empty file created: " + filename);
+				IDcounter =0;
+				writeFile(accounts, IDcounter);
+			}
+		
+			//catch e | e possible in java1.7
 		if(!failed)
 			try {
 				accounts =  (ArrayList<?>) inputStream.readObject();
@@ -79,7 +84,7 @@ public class FileHandler
 	/**
 	 * Writes a given ArrayList and integer to the file.
 	 * @param accounts ArrayList to be written to file.
-	 * @param _IDcounter Integer to be written to file.
+	 * @param _IDcounter integer to be written to file.
 	 * @return Returns whether filewrite was successful. 
 	 */
 	protected boolean writeFile(ArrayList<?> accounts, int _IDcounter)

@@ -1,14 +1,12 @@
 package hotelchain;
-
-import java.util.ArrayList;
-
 /**
  * Main class of the HotelChain application. Contains chain and hotel information 
  * as well as its guest and registration management systems.
- * Extends the FileHandler class to store/export HotelChain configuration.
+ * int NUMBER_OF_HOTELS, String[] hotelNames and  int[] roomsInHotel can be adapted
+ * to reflect chain's current situation.
  * @author Joost Janssen
  */
-public class HotelChain extends FileHandler
+public class HotelChain 
 {	
 	private final String name;
 	private Hotel[] hotels;
@@ -19,41 +17,29 @@ public class HotelChain extends FileHandler
 	private final String[] hotelNames = new String[] { "SimpleHotel", "MediocreHotel", "FancyHotel" };
 	private final String[] roomTypes = new String[]{"Single", "Double", "Queensize", "Kingsize", "Family", "Bridal"}; 
 	private final int[] roomsInHotel = new int[] { 60, 60, 80 };
-	private final int standardRate = 50; //Nightly rate for a single bed in the cheapest hotel, to be used as baseline.
-	private final static String filename = "hotelchain.hotelsConfiguration";
+	private final int standardRate = 50; //Nightly rate for a single bed in the cheapest hotel, to be used as baseline.	
 	
 	/**
-	 * Constructs an instance of a HotelChain and creates instances of its guest registration and reservation manager systems.
-	 * Reads hotel configuration from file, or else create new configuration as specified in method createHotels().
+	 * Constructs an instance of a HotelChain and creates instances of its guest registration and 
+	 * reservation manager systems.
 	 * @param _name Name of this HotelChain.
+	 * TODO Comment
 	 */
-	@SuppressWarnings("unchecked")
 	public HotelChain(String _name)
 	{
-		super(filename);
 		name = _name;
-		
-		if(createNewFile())
-		{
-			hotels = new Hotel[NUMBER_OF_HOTELS];
-			createHotels();
-		}
-		else
-		{
-			ArrayList<Hotel> hotelList = (ArrayList<Hotel>) readFile();
-			hotels = new Hotel[hotelList.size()];
-			for(int i=0; i< hotelList.size(); i++)
-				hotels[i] = hotelList.get(i);
-		}
+		hotels = new Hotel[NUMBER_OF_HOTELS];
+		//TODO Hotels to file?
+		addHotels();
 		
 		guests = new GuestRegistration(); 
 		reservations = new ReservationManager(hotels);
 	}
 	
 	/**
-	 * Populates this hotel chain with its hotels and writes the hotels to file.
+	 * Populates this hotel chain with its hotels.
 	 */
-	private void createHotels()
+	private void addHotels()
 	{
 		for(int i=0; i<NUMBER_OF_HOTELS; i++)
 		{
@@ -78,9 +64,12 @@ public class HotelChain extends FileHandler
 						case 3: hotels[i].addRoom(new KingsizeRoom(roomNrCtr, standardRate + (3 + i)*standardRate/(2)));break;
 						case 4: hotels[i].addRoom(new FamilySuite(roomNrCtr, standardRate + (3 + 5*i)*standardRate/(2)));break;
 						case 5: hotels[i].addRoom(new BridalSuite(roomNrCtr, standardRate + (10 + 3*i*i)*standardRate/(2)));break;
-						default: hotels[i].addRoom(new Room(roomNrCtr, 1, standardRate));
+						default: hotels[i].addRoom(new Room(roomNrCtr, 1, standardRate));//TODO check sanity
 					}
-					roomNrCtr++;						
+				
+					roomNrCtr++;	
+					
+					
 				}
 			while(roomNrCtr <= roomsInHotel[i])       // Fill family suites up with modulo values of ratios used in typeFrequency[] to complete hotel population. 
 			{
@@ -88,12 +77,7 @@ public class HotelChain extends FileHandler
 				 roomNrCtr++;
 			}				
 		}
-		
-		ArrayList<Hotel> hotelList = new ArrayList<Hotel>();
-		for(int i=0; i < hotels.length; i++)
-			hotelList.add(hotels[i]);
-		
-		writeFile(hotelList, -1);			
+			
 	}
 	
 	/**
@@ -107,7 +91,7 @@ public class HotelChain extends FileHandler
 	/**
 	 * @return Returns an array of this HotelChain's Hotels.
 	 */
-	protected Hotel[] getHotels()
+	public Hotel[] getHotels()
 	{
 		return hotels;
 	}
@@ -115,7 +99,7 @@ public class HotelChain extends FileHandler
 	/**
 	 * @return Returns this chain's ReservationManager system.
 	 */
-	protected ReservationManager getReservationManager()
+	public ReservationManager getReservationManager()
 	{
 		return reservations;
 	}
@@ -123,7 +107,7 @@ public class HotelChain extends FileHandler
 	/**
 	 * @return Returns this chain's GuestRegistration system.
 	 */
-	protected GuestRegistration getGuestRegistration()
+	public GuestRegistration getGuestRegistration()
 	{
 		return guests;
 	}

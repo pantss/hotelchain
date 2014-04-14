@@ -2,6 +2,8 @@ package hotelchain;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
@@ -9,7 +11,7 @@ import java.text.SimpleDateFormat;
  * Extends the FileHandler class in order to be able to store guest registration information to a file. 
  * The variable filename may be adapted to reflect a desired file name.
  * @author Joost Janssen
- * TODO Future features: room&pricing managers, check in/out, read archive if desired, better guest removal handling (w/in reservation manager instd. of its interface)..
+ * TODO Future features: room&pricing managers, check in/out, read archive if desired.
  */
 public class ReservationManager extends FileHandler
 {
@@ -39,8 +41,10 @@ public class ReservationManager extends FileHandler
 		else
 			reservations = (ArrayList<Reservation>)readFile();
 		
-		reservationIDcounter = getIDcounter();		
-		passUpcomingReservationsToHotels();		
+		reservationIDcounter = getIDcounter();
+		
+		passUpcomingReservationsToHotels();
+		
 		archiveFile = new FileHandler(archive_filename);
 	}
 	
@@ -65,9 +69,10 @@ public class ReservationManager extends FileHandler
 	 * @param resEndDate End date of reservation.
 	 * @return Returns the resulting reservation made. Returns null if desired reservation could not be made.
 	 */
-	protected Reservation reserveRoom(Guest resGuest, Hotel resHotel, String roomType, Calendar resStartDate, Calendar resEndDate)
+	public Reservation reserveRoom(Guest resGuest, Hotel resHotel, String roomType, Calendar resStartDate, Calendar resEndDate)
 	{
 		Reservation	reservation = resHotel.reserveRoom(resGuest, resStartDate, resEndDate, roomType, reservationIDcounter);
+
 		if(reservation != null)
 		{ 
 			reservations.add(reservation);
@@ -83,7 +88,7 @@ public class ReservationManager extends FileHandler
 	 * Cancels a given Reservation.
 	 * @param reservation Reservation to be cancelled.
 	 */
-	protected void cancelReservation(Reservation reservation)
+	public void cancelReservation(Reservation reservation)
 	{
 		for(int i=0;i<reservations.size();i++)
 			if(reservation.getID() == reservations.get(i).getID())
@@ -102,7 +107,7 @@ public class ReservationManager extends FileHandler
 	 * @param resID Reservation ID.
 	 * @return Returns the Reservation with given reservation ID. Returns null if no reservation was found.
 	 */
-	protected Reservation getReservation(int resID)
+	public Reservation getReservation(int resID)
 	{
 		for(int i=0; i<reservations.size();i++)
 			if(reservations.get(i).getID() == resID)
@@ -116,7 +121,7 @@ public class ReservationManager extends FileHandler
 	 * @param guestID Guest ID number.
 	 * @return Returns the ID number of the reservation made by the Guest with given guestID. Returns -1 if no reservation was found.
 	 */
-	protected ArrayList<Reservation> findReservationID(int guestID)
+	public ArrayList<Reservation> findReservationID(int guestID)
 	{
 		ArrayList<Reservation> hits = new ArrayList<Reservation>();
 		if(guestID>-1)
@@ -130,7 +135,7 @@ public class ReservationManager extends FileHandler
 	/**
 	 * @return Returns an ArrayList of Reservations that where either cancelled or whose end date is before the current date.
 	 */
-	protected ArrayList<Reservation> getPastAndCancelledReservations()
+	public ArrayList<Reservation> getPastAndCancelledReservations()
 	{
 		ArrayList<Reservation> pastReservations = new ArrayList<Reservation>();
 		for(int i=0; i<reservations.size(); i++)
@@ -146,7 +151,7 @@ public class ReservationManager extends FileHandler
 	 * @return Returns whether the given ArrayList was successfully moved to archive.
 	 */
 	@SuppressWarnings("unchecked")
-	protected boolean moveReservationsToArchive(ArrayList<Reservation> oldReservations)
+	public boolean moveReservationsToArchive(ArrayList<Reservation> oldReservations)
 	{
 		for(int i=0; i<oldReservations.size();i++)
 			reservations.remove(oldReservations.get(i));
@@ -163,12 +168,13 @@ public class ReservationManager extends FileHandler
 			return true;
 		
 		return false;		
-	}	
+	}
+	
 	
 	/**
 	 * @return Returns the current state of the reservation ID counter.
 	 */
-	protected int getReservationIDcounter()
+	public int getReservationIDcounter()
 	{
 		return reservationIDcounter;
 	}
@@ -176,15 +182,15 @@ public class ReservationManager extends FileHandler
 	/**
 	 * @return Returns the current total number of Reservations.
 	 */
-	protected int getNumberOfReservations()
+	public int getNumberOfReservations()
 	{
 		return reservations.size();
 	}
 		
 	/**
-	 * @return Returns an array of the hotels managed by this Reservation manager.
+	 * @return Returns an array of the hotels managed by this Reservationmanager.
 	 */
-	protected Hotel[] getHotels()
+	public Hotel[] getHotels()
 	{
 		return hotels;
 	}
@@ -205,5 +211,16 @@ public class ReservationManager extends FileHandler
 	public String calendarToString(Calendar date)
 	{
 		return dateFormat.format(date.getTime());
+	}
+	
+	/**
+	 * Converts a given date in String format (dateformatted) to Date format.
+	 * @param date Date to convert to Date.
+	 * @return Returns a Date representation of given date.
+	 * @throws ParseException Failed to convert String to Date.
+	 */
+	public Date stringToCalendar(String date) throws ParseException
+	{
+		return (Date) dateFormat.parse(date);
 	}
 }

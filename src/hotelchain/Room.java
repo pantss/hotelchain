@@ -13,9 +13,8 @@ public class Room implements Serializable
 	
 	/**
 	 * Constructs an instance of a Room.
-	 * @param _roomNumber Room number.
-	 * @param _beds Number of beds.
-	 * @param _rate Nightly rate.
+	 * @param room Room number of this room.
+	 * TODO Comment
 	 */
 	public Room(int _roomNumber, int _beds, int _rate)
 	{
@@ -33,9 +32,17 @@ public class Room implements Serializable
 	}
 	
 	/**
+	 * @return Returns the number of beds in this room.
+	 */
+	public int getNumberOfBeds()
+	{
+		return beds;
+	}
+	
+	/**
 	 * @return Returns the rate of this room per night.
 	 */
-	protected int getRate()
+	public int getRate()
 	{
 		return rate;
 	}
@@ -44,14 +51,5 @@ public class Room implements Serializable
 	public String toString()
 	{
 		return "Room";
-	}	
-	
-	/**
-	 * @return Returns the number of beds in this room.
-	 */
-	protected int getNumberOfBeds()
-	{
-		return beds;
 	}
-
 }
