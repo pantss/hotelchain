@@ -24,7 +24,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 	/**
 	 * Initializes this interface.
 	 */
-	public void init()
+	protected void init()
 	{
 		exitRequested = false;
 		while(!exitRequested)
@@ -46,7 +46,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 		printHeader("GUEST REGISTRATION MANAGEMENT");
 		
 		printOptions(options, true);				
-		int choice = getUserChoice(0,options.length);		
+		int choice = getUserChoice(1,options.length);		
 		switch(choice)
 		{
 			case 1: displayGuestsInformation();  break;
@@ -95,7 +95,7 @@ public class GuestRegistrationTextInterface extends TextInterface
 			printOptions(options, false);		
 			int choice = -1;
 			while(choice == -1)
-				choice = getUserChoice(0,options.length);
+				choice = getUserChoice(1,options.length);
 			
 			int guestID = -1;
 			boolean cancel = false;		
@@ -254,27 +254,11 @@ public class GuestRegistrationTextInterface extends TextInterface
 		else
 			System.out.println("! There are currently no guests registered.");
 	}
-	
-	/**
-	 * Prints the registered information of a given Guest.
-	 * @param guest Guest to print information of.
-	 * @param printID Indicates whether the Guests's guestID should be printed.
-	 */
-/*	protected void printGuestInfo(Guest guest, boolean printID)
-	{
-		System.out.println("\n  Result:\n  ***********************************");
-		print("Name: " + guest.getName(), "*");
-		print("Address: " + guest.getAddress(), "*");
-		print("City: " + guest.getCity(), "*");
-		print("Country: " + guest.getCountry(), "*");
-		if(printID)
-			print( "Guest ID: " + guest.getID(), "*");
-		System.out.println("  ***********************************");
-	}
-*/	
+
 	/**
 	 * Prints Guest g to the screen as part of a table.
-	 * @param g Guest Guest to be printed
+	 * @param g Guest Guest to be printed.
+	 * @param printID Indicates whether guest ID should be printed.
 	 */
 	protected void printGuest(Guest g, boolean printID)
 	{
@@ -284,7 +268,6 @@ public class GuestRegistrationTextInterface extends TextInterface
 				print(" " + g.getID() + "|" + g.getName());
 			else
 				print(g.getID() + "| " + g.getName());
-
 		}		
 		else
 			print(g.getName());
