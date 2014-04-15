@@ -6,5 +6,10 @@ CONTENTS
 ./src/ - Source folder
 ./hotelchain.jar - Runnable JAR file of package. 
 
+EXAMPLE DATA FILES INCLUDED
+./hotelchain.hotelsConfiguration
+./hotelchain.registeredGuests
+./hotelchain.reservations
+
 HELP
 See ./doc/index.html for Javadoc.
