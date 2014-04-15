@@ -46,10 +46,10 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	{
 		//Last option in array must be exit option
 		String[] options = {"Show all reservations.",
-							"Reserve a room",
-							"Find a reservation",											
-							"Cancel a reservation",
-							"Clean reservations",
+							"Reserve a room.",
+							"Find a reservation.",											
+							"Cancel a reservation.",
+							"Clean reservations.",
 							"Go back"};
 		
 		printHeader("RESERVATION MANAGEMENT");		
@@ -59,7 +59,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 		{
 			case 1: displayReservationsInformation(); break;
 			case 2: showReserveRoom(); break;
-			case 3: showFindReservation(); break;
+			case 3: showFindReservation(true); break;
 			case 4: showCancelReservation(); break;
 			case 5: showCleanReservations(); break;
 			default: exitRequested = true;
@@ -177,7 +177,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 			while(choice == -1)
 				choice = getUserChoice(1, 3);					
 			if(choice == 1)
-				reservationID = showFindReservation();
+				reservationID = showFindReservation(false);
 			else if(choice==2)
 			{
 				displayReservationsInformation();				
@@ -213,9 +213,10 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 	
 	/**
 	 * Displays the Find Reservation screen of this interface.
+	 * @param printResult Indicates whether or not the resulting reservation should be printed to screen.
 	 * @return Returns the ID of the reservation selected. Returns -1 in all other cases.
 	 */
-	private int showFindReservation()
+	private int showFindReservation(boolean printResult)
 	{
 		if(reservationManager.getNumberOfReservations() > 0)
 		{			
@@ -245,7 +246,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 					}
 					else
 					{
-						showFindReservation();
+						showFindReservation(printResult);
 						cancel = true;				
 					}
 					break;
@@ -254,7 +255,7 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 					reservationID = getUserChoice(0, reservationManager.getIDcounter());
 					if(reservationID == -1)
 					{
-						showFindReservation();
+						showFindReservation(printResult);
 						cancel = true;
 					}
 					break;
@@ -266,9 +267,12 @@ public class ReservationManagerTextInterface extends GuestRegistrationTextInterf
 				Reservation reservation = reservationManager.getReservation(reservationID);				
 				if(reservation != null)
 				{
-					printHeader("Result:");
-					printReservation(reservation);
-					printDoubleLine();
+					if(printResult)
+					{	
+						printHeader("Result");
+						printReservation(reservation);
+						printDoubleLine();
+					}
 					return reservation.getID();
 				}
 				else
